@@ -9,7 +9,7 @@
 - link:
     ~/.tmux.conf: tmux.conf
     ~/.config: config
-    ~/.oh-my-zsh: zsh
+    ~/.oh-my-zsh/custom: zsh_custom
     ~/.zshrc: zshrc
 
 - shell:
