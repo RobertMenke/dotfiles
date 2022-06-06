@@ -1,0 +1,25 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.tmux.conf: 
+      relink: true
+      path: ~/.tmux.conf
+    ~/.config/lvim/config.lua:
+      create: true
+      path: ~/.config/lvim/config.lua
+    ~/.config: 
+      create: true
+      path: ~/.config
+    ~/.oh-my-zsh: 
+      create: true
+      path: ~/.oh-my-zsh
+    ~/.zshrc:
+      force: true
+      relink: true
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
