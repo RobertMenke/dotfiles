@@ -47,6 +47,7 @@ export PATH="/usr/local/bin/flutter/bin:$PATH"
 
 # Homebrew
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
 
 # LunarVim
 export PATH="/Users/rbmenke/.local/bin:$PATH"
@@ -61,3 +62,6 @@ export PATH="/opt/homebrew/Cellar/heroku/7.60.2:$PATH"
 export NVM_DIR=~/.nvm
 source ~/.nvm/nvm.sh
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+
+# Necessary to explicitly export this as of tmux 3.3 https://github.com/tmux/tmux/issues/3203
+export TERM=xterm-256color
