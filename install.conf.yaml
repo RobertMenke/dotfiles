@@ -8,9 +8,8 @@
 
 - link:
     ~/.tmux.conf: tmux.conf
-    ~/.config: config
+    ~/.config/lvim: lvim
+    ~/.config/iterm2: iterm2
+    ~/.config/alacritty.yml: alacritty.yml
     ~/.oh-my-zsh/custom: zsh_custom
     ~/.zshrc: zshrc
-
-- shell:
-  - [git submodule update --init --recursive, Installing submodules]
