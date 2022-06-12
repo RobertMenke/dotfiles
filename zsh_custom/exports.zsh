@@ -65,3 +65,9 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 
 # Necessary to explicitly export this as of tmux 3.3 https://github.com/tmux/tmux/issues/3203
 export TERM=xterm-256color
+
+export PATH="$PATH:$HOME/.1password"
+
+# Equater CLI
+export EQUATER_API_BASE=https://www.equater.io
+export EQUATER_LOCAL_DATABASE_URL=file:$HOME/.local/share/Equater/equater_cli.db

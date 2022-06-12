@@ -4,6 +4,6 @@
 # For a full list of active aliases, run `alias`.
 alias 'cat'='bat'
 alias 'ls'='exa'
-alias 'fresh'='source ~/.zshrc'
+alias 'fresh'='clear && source ~/.zshrc'
 alias 'equater-up'='tmuxinator start equater'
 alias 'git-recent-branches'="git for-each-ref --sort=-committerdate --count=10 refs/heads/"

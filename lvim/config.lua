@@ -41,16 +41,24 @@ lvim.keys.normal_mode["<C-p>"] = ":cp<CR>"
 lvim.keys.normal_mode["<C-v>"] = "<C-w><C-v>"
 lvim.keys.normal_mode["<C-l>"] = "<C-w><C-l>"
 lvim.keys.normal_mode["<C-h>"] = "<C-w><C-h>"
+-- Rust hover actions
+lvim.keys.normal_mode["gP"] = "<cmd>lua require'rust-tools.hover_actions'.hover_actions()<CR>"
 
 
 -- Use which-key to add extra bindings with the leader-key prefix
--- lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
+lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
+
 lvim.builtin.which_key.mappings["t"] = {
     name = "Test",
     f = { "<cmd>TestFile<cr>", "File" },
     n = { "<cmd>TestNearest<cr>", "Nearest" },
     s = { "<cmd>TestSuite<cr>", "Suite" },
     l = { "<cmd>TestSuite<cr>", "Last" },
+}
+
+lvim.builtin.which_key.mappings["z"] = {
+    name = "Custom Mappings",
+    s = { ":s#\\C\\(\\<\\u[a-z0-9]\\+\\|[a-z0-9]\\+\\)\\(\\u\\)#\\l\\1_\\l\\2#g<cr>", "camelCase to snake_case" }
 }
 
 -- TODO: User Config for predefined plugins
@@ -219,14 +227,18 @@ lvim.plugins = {
             local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/'
             local codelldb_path = extension_path .. 'adapter/codelldb'
             local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
+            local rust_tools = require("rust-tools")
 
-            require("rust-tools").setup({
+            rust_tools.setup({
                 dap = {
                     adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
                 },
                 tools = {
                     autoSetHints = true,
                     hover_with_actions = true,
+                    hover_actions = {
+                        auto_focus = true
+                    },
                     runnables = {
                         use_telescope = true,
                     },
@@ -235,6 +247,13 @@ lvim.plugins = {
                     cmd_env = requested_server._default_options.cmd_env,
                     on_attach = require("lvim.lsp").common_on_attach,
                     on_init = require("lvim.lsp").common_on_init,
+                    settings = {
+                        ["rust-analyzer"] = {
+                            checkOnSave = {
+                                command = "clippy"
+                            }
+                        }
+                    }
                 },
             })
         end,
