@@ -58,7 +58,8 @@ lvim.builtin.which_key.mappings["t"] = {
 
 lvim.builtin.which_key.mappings["z"] = {
     name = "Custom Mappings",
-    s = { ":s#\\C\\(\\<\\u[a-z0-9]\\+\\|[a-z0-9]\\+\\)\\(\\u\\)#\\l\\1_\\l\\2#g<cr>", "camelCase to snake_case" }
+    s = { ":s#\\C\\(\\<\\u[a-z0-9]\\+\\|[a-z0-9]\\+\\)\\(\\u\\)#\\l\\1_\\l\\2#g<cr>", "camelCase to snake_case (line)" },
+    S = { ":%s#\\C\\(\\<\\u[a-z0-9]\\+\\|[a-z0-9]\\+\\)\\(\\u\\)#\\l\\1_\\l\\2#g<cr>", "camelCase to snake_case (file)" }
 }
 
 -- TODO: User Config for predefined plugins
