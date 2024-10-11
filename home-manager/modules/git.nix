@@ -23,7 +23,7 @@
       };
       core = {
         editor = "nvim";
-        ignorecase = false
+        ignorecase = false;
         pager = "${pkgs.delta}/bin/delta";
         fsmonitor = true;
         untrackedcache = true;

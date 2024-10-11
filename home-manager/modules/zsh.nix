@@ -23,10 +23,10 @@
       ];
     };
     shellAliases = {
-      cat='bat';
-      ls='exa';
-      fresh='clear && source ~/.zshrc';
-      equater-up='tmuxinator start equater';
+      cat="bat";
+      ls="exa";
+      fresh="clear && source ~/.zshrc";
+      equater-up="tmuxinator start equater";
       git-recent-branches="git for-each-ref --sort=-committerdate --count=10 refs/heads/";
     };
   };
