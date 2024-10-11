@@ -1,13 +1,5 @@
-{ inputs, config, pkgs, lib, isDarwin, isLinux, ... }:
+{ config, pkgs, lib, isDarwin, isLinux, ... }:
 {  
-  # nixpkgs.overlays = [
-  #   (final: prev:
-  #     (import ../packages {
-  #       inherit inputs;
-  #       inherit pkgs;
-  #     }))
-  #   inputs.neovim-nightly-overlay.overlays.default
-  # ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
@@ -87,11 +79,11 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # imports = [
-  #   ./modules/git.nix
-  #   ./modules/neovim.nix
-  #   ./modules/zsh.nix
-  #   ./modules/bat.nix
-  #   ./modules/ssh.nix
-  # ];
+  imports = [
+    ./modules/git.nix
+    ./modules/neovim.nix
+    ./modules/zsh.nix
+    ./modules/bat.nix
+    ./modules/ssh.nix
+  ];
 }

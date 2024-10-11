@@ -25,7 +25,6 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
         extraSpecialArgs = {
-            inherit inputs;
             isDarwin = true;
             isLinux = false;
         };
