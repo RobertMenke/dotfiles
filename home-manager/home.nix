@@ -82,7 +82,7 @@
       nvim.source = "$HOME/.dotfiles/nvim";
       yabai.source = "$HOME/.dotfiles/yabai";
       skhd.source = "$HOME/.dotfiles/skhd";
-      "alacritty.toml".source = "$HOME/.dotfiles/alacritty.toml";
+      alacritty.source = "$HOME/.dotfiles/alacritty.toml";
     };
   };
 
