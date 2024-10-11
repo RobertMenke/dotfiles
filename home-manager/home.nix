@@ -82,7 +82,7 @@
       nvim.source = "../nvim";
       yabai.source = "../yabai";
       skhd.source = "../skhd";
-      alacritty.source = "../alacritty.toml";
+      "alacritty.toml".source = "../alacritty.toml";
     };
   };
 
