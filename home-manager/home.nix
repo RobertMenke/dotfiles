@@ -79,10 +79,10 @@
   # Set up xdg config files
   xdg = {
     configFile = {
-      nvim.source = "$HOME/.dotfiles/nvim";
-      yabai.source = "$HOME/.dotfiles/yabai";
-      skhd.source = "$HOME/.dotfiles/skhd";
-      alacritty.source = "$HOME/.dotfiles/alacritty.toml";
+      nvim.source = builtins.getEnv "HOME" + "/.dotfiles/nvim";
+      yabai.source = builtins.getEnv "HOME" + "/.dotfiles/yabai";
+      skhd.source = builtins.getEnv "HOME" + "/.dotfiles/skhd";
+      alacritty.source = builtins.getEnv "HOME" + "/.dotfiles/alacritty.toml";
     };
   };
 
