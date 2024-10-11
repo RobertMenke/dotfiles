@@ -6,8 +6,5 @@
     vimAlias = true;
     vimdiffAlias = true;
     defaultEditor = true;
-    configFile = {
-      nvim = "$HOME/.dotfiles/nvim";
-    };
   };
 }

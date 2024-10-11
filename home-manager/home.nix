@@ -51,9 +51,6 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-    ".config/alacritty.toml".source = .dotfiles/alacritty.toml;
-    ".config/yabai".source = .dotfiles/yabai;
-    ".config/skhd".source = .dotfiles/skhd;
   };
 
   # Home Manager can also manage your environment variables through
@@ -78,6 +75,16 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # Set up xdg config files
+  xdg = {
+    configFile = {
+      nvim.source = "$HOME/.dotfiles/nvim";
+      yabai.source = "$HOME/.dotfiles/yabai";
+      skhd.source = "$HOME/.dotfiles/skhd";
+      "alacritty.toml".source = "$HOME/.dotfiles/alacritty.toml";
+    };
+  };
 
   imports = [
     ./modules/git.nix
