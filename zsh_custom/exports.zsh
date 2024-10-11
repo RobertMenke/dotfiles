@@ -5,7 +5,7 @@ export PATH=/Users/rbmenke/Library/Python/3.8/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/rbmenke/.oh-my-zsh"
 # Default editor
-export EDITOR='lvim'
+export EDITOR='nvim'
 # Set the path to the default path before appending anything. This ensures that I can source ~/.bash_profile in the
 # same terminal window as many times as I want without unintended consequences
 export PATH="$(getconf PATH)":/usr/local/bin
@@ -34,7 +34,7 @@ export PATH="$HOME/.npm-packages/bin:$PATH"
 export PATH=$PATH:'/Users/rbmenke/Library/Python/2.7/bin'
 
 # NVM node (needed for intellij file watcher)
-export PATH="/Users/rbmenke/.nvm/versions/node/v16.13.0/bin:${PATH}"
+# export PATH="/Users/rbmenke/.nvm/versions/node/v16.13.0/bin:${PATH}"
 
 # Fastlane
 export PATH="$HOME/.fastlane/bin:$PATH"
@@ -71,3 +71,9 @@ export PATH="$PATH:$HOME/.1password"
 # Equater CLI
 export EQUATER_API_BASE=https://www.equater.io
 export EQUATER_LOCAL_DATABASE_URL=file:$HOME/.local/share/Equater/equater_cli.db
+
+# Nix
+export PATH="$PATH:/nix/var/nix/profiles/default/bin"
+export PATH="$PATH:/Users/rbmenke/.nix-profile/bin"
+
+
