@@ -30,18 +30,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 # NPM
 export PATH="$HOME/.npm-packages/bin:$PATH"
 
-# Localstack
-export PATH=$PATH:'/Users/rbmenke/Library/Python/2.7/bin'
-
-# NVM node (needed for intellij file watcher)
-# export PATH="/Users/rbmenke/.nvm/versions/node/v16.13.0/bin:${PATH}"
-
-# Fastlane
-export PATH="$HOME/.fastlane/bin:$PATH"
-
-# Doom emacs
-export PATH="$HOME/.emacs.d/bin:$PATH"
-
 # Flutter
 export PATH="/usr/local/bin/flutter/bin:$PATH"
 
@@ -54,9 +42,6 @@ export PATH="/Users/rbmenke/.local/bin:$PATH"
 
 # Heroku CLI
 export PATH="/opt/homebrew/Cellar/heroku/7.60.2:$PATH"
-
-# SSH 
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # NVM setup - ensure this is run after the path is configured
 export NVM_DIR=~/.nvm

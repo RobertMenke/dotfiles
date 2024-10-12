@@ -83,13 +83,14 @@
       yabai.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/yabai";
       skhd.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/skhd";
       "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
+      "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/starship.toml";
     };
   };
 
   imports = [
     ./modules/git.nix
     ./modules/neovim.nix
-    ./modules/zsh.nix
+    ./modules/fish.nix
     ./modules/bat.nix
     ./modules/ssh.nix
   ];
