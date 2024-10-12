@@ -79,10 +79,10 @@
   # Set up xdg config files
   xdg = {
     configFile = {
-      nvim.source = "../nvim";
-      yabai.source = "../yabai";
-      skhd.source = "../skhd";
-      "alacritty.toml".source = "../alacritty.toml";
+      nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/nvim";
+      yabai.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/yabai";
+      skhd.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/skhd";
+      "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
     };
   };
 
