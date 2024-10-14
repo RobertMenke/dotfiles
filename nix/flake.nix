@@ -25,18 +25,23 @@
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#robert-mbp
       darwinConfigurations."robert-mbp" = nix-darwin.lib.darwinSystem {
+        inherit system;
         modules = [ 
-          ./darwin-configuration.nix 
-          home-manager.darwinModules
+          ./darwin-configuration.nix         
+                    # `home-manager` module
+          home-manager.darwinModules.home-manager
           {
+            # nixpkgs = nixpkgsConfig;
+            # `home-manager` config
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.rbmenke = import ./home-manager/home.nix;
+            home-manager.users.rbmenke = import ./home-manager/home.nix;            
           }
         ];
         specialArgs = {
             isDarwin = true;
             isLinux = false;
+            configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
         };
       };
 

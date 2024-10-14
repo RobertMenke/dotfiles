@@ -1,4 +1,4 @@
-{ configurationRevision, nixpkgs, nix-darwin, home-manager, pkgs, ... }:
+{ configurationRevision, nixpkgs, pkgs, ... }:
 {
   # imports = [ <home-manager/nix-darwin> ];
   # List packages installed in system profile. To search by name, run:
@@ -29,25 +29,4 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
-
-  users.users.rbmenke = {
-    name = "rbmenke";
-    home = "/Users/rbmenke";
-  };
-
-  # Home manager
-  home-manager.users.rbmenke = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-
-      # Specify your home configuration modules here, for example,
-      # the path to your home.nix.
-      modules = [ ./home-manager/home.nix ];
-
-      # Optionally use extraSpecialArgs
-      # to pass through arguments to home.nix
-      extraSpecialArgs = {
-          isDarwin = true;
-          isLinux = false;
-      };
-    };
 }

@@ -1,9 +1,9 @@
-{ config, pkgs, lib, isDarwin, isLinux, ... }:
+{ config, pkgs, lib, ... }:
 {  
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
-  home.homeDirectory = "/Users/rbmenke";
+  home.homeDirectory = lib.mkForce "/Users/rbmenke";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -87,7 +87,7 @@
     };
   };
 
-  modules = [
+  imports = [
     ./modules/git.nix
     ./modules/neovim.nix
     ./modules/fish.nix
