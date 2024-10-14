@@ -22,7 +22,15 @@
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#MacBook-Pro-60
       darwinConfigurations."robert-mbp" = nix-darwin.lib.darwinSystem {
-        modules = [ ./darwin-configuration.nix ];
+        modules = [ 
+          ./darwin-configuration.nix 
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.rbmenke = import ./home-manager/home.nix;
+          }
+        ];
         specialArgs = {
             isDarwin = true;
             isLinux = false;

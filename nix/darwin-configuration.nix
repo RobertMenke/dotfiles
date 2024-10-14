@@ -28,7 +28,12 @@
   system.stateVersion = 5;
 
   # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = "x86_64-darwin";
+  nixpkgs.hostPlatform = "aarch64-darwin";
+
+  users.users.rbmenke = {
+    name = "rbmenke";
+    home = "/Users/rbmenke";
+  };
 
   # Home manager
   home-manager.users.rbmenke = home-manager.lib.homeManagerConfiguration {
