@@ -1,5 +1,6 @@
-{ self, nixpkgs, nix-darwin, pkgs, ... }:
+{ configurationRevision, nixpkgs, nix-darwin, home-manager, pkgs, ... }:
 {
+  imports = [ <home-manager/nix-darwin> ];
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
@@ -20,7 +21,7 @@
   programs.fish.enable = true;
 
   # Set Git commit hash for darwin-version.
-  system.configurationRevision = self.rev or self.dirtyRev or null;
+  system.configurationRevision = configurationRevision;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -28,4 +29,20 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "x86_64-darwin";
+
+  # Home manager
+  home-manager.users.rbmenke = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+
+      # Specify your home configuration modules here, for example,
+      # the path to your home.nix.
+      modules = [ ./home-manager/home.nix ];
+
+      # Optionally use extraSpecialArgs
+      # to pass through arguments to home.nix
+      extraSpecialArgs = {
+          isDarwin = true;
+          isLinux = false;
+      };
+    };
 }

@@ -60,5 +60,6 @@ export EQUATER_LOCAL_DATABASE_URL=file:$HOME/.local/share/Equater/equater_cli.db
 # Nix
 export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 export PATH="$PATH:/Users/rbmenke/.nix-profile/bin"
+export PATH="$PATH:/run/current-system/sw/bin"
 
 
