@@ -1,4 +1,4 @@
-{ pkgs, lib, isDarwin, isLinux, isServer, ... }: {
+{ pkgs, lib, isDarwin, isLinux, ... }: {
   home.sessionVariables = {
     HOMEBREW_NO_ANALYTICS = "1";
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
@@ -20,10 +20,10 @@
     fish = {
       enable = true;
 
-      plugins = [{
-        name = "foreign-env";
-        inherit (pkgs.fishPlugins.foreign-env) src;
-      }];
+      # plugins = [{
+      #   name = "foreign-env";
+      #   inherit (pkgs.fishPlugins.foreign-env) src;
+      # }];
 
       shellAliases = {
         cat="bat";

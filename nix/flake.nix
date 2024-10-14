@@ -14,17 +14,20 @@
     };
   };
 
-  outputs = { self, nixpkgs, nix-darwin, home-manager, ... }:
+  # The inputs@ syntax in the context of Nix flakes refers to function argument destructuring 
+  # with named access to the entire set of arguments - e.g. can use the variable inputs which 
+  # refers to the entire attribute set
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#MacBook-Pro-60
+      # $ darwin-rebuild build --flake .#robert-mbp
       darwinConfigurations."robert-mbp" = nix-darwin.lib.darwinSystem {
         modules = [ 
           ./darwin-configuration.nix 
-          home-manager.darwinModules.home-manager
+          home-manager.darwinModules
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

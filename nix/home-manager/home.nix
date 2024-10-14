@@ -87,7 +87,7 @@
     };
   };
 
-  imports = [
+  modules = [
     ./modules/git.nix
     ./modules/neovim.nix
     ./modules/fish.nix
