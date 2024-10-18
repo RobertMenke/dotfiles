@@ -5,7 +5,7 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/release-24.05";
     nix-darwin = {
-      url = "github:LnL7/nix-darwin/release-24.05";
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
@@ -25,10 +25,10 @@
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#robert-mbp
       darwinConfigurations."robert-mbp" = nix-darwin.lib.darwinSystem {
-        inherit system;
+        # inherit system;
+        system = "aarch64-darwin";
         modules = [ 
           ./darwin-configuration.nix         
-                    # `home-manager` module
           home-manager.darwinModules.home-manager
           {
             # nixpkgs = nixpkgsConfig;
@@ -39,6 +39,7 @@
           }
         ];
         specialArgs = {
+            inherit inputs;
             isDarwin = true;
             isLinux = false;
             configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
