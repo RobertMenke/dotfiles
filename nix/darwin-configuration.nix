@@ -17,7 +17,7 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # https://github.com/LnL7/nix-darwin/issues/1081#issuecomment-2394824794
-  nix.always-allow-substitutes = true;
+  nix.settings.always-allow-substitutes = true;
 
 
   # Create /etc/zshrc that loads the nix-darwin environment.
