@@ -16,6 +16,10 @@
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
+  # https://github.com/LnL7/nix-darwin/issues/1081#issuecomment-2394824794
+  nix.always-allow-substitutes = true;
+
+
   # Create /etc/zshrc that loads the nix-darwin environment.
   # programs.zsh.enable = true;  # default shell on catalina
   programs.fish.enable = true;
@@ -29,7 +33,4 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
-  
-  # https://github.com/LnL7/nix-darwin/issues/1081#issuecomment-2394824794
-  always-allow-substitutes = true;
 }
