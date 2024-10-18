@@ -29,4 +29,7 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
+  
+  # https://github.com/LnL7/nix-darwin/issues/1081#issuecomment-2394824794
+  always-allow-substitutes = true;
 }
