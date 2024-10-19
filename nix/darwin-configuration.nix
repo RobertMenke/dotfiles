@@ -17,7 +17,7 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # https://github.com/LnL7/nix-darwin/issues/1081#issuecomment-2394824794
-  nix.settings.always-allow-substitutes = true;
+  # nix.settings.always-allow-substitutes = true;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   # programs.zsh.enable = true;  # default shell on catalina
@@ -32,4 +32,9 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
+
+  users.users.rbmenke = {
+    name = "rbmenke";
+    home = "/Users/rbmenke";
+  };
 }

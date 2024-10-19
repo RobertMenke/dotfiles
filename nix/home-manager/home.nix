@@ -3,6 +3,7 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
+  home.homeDirectory = "/Users/rbmenke";
   # home.homeDirectory = lib.mkForce "/Users/rbmenke";
 
   # This value determines the Home Manager release that your configuration is
@@ -45,6 +46,16 @@
         source = "${config.home.homeDirectory}/.dotfiles/nvim";
         target = "${config.home.homeDirectory}/.config/nvim";
       };
+      yabai = {
+        source = "${config.home.homeDirectory}/.dotfiles/yabai";
+        target = "${config.home.homeDirectory}/.config/yabai";
+      };
+      skhd = {
+        source = "${config.home.homeDirectory}/.dotfiles/skhd";
+        target = "${config.home.homeDirectory}/.config/skhd";
+      };
+      "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
+      "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/starship.toml";
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
@@ -79,17 +90,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  # Set up xdg config files
-  xdg = {
-    configFile = {
-      # nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/nvim";
-      yabai.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/yabai";
-      skhd.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/skhd";
-      "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
-      "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/starship.toml";
-    };
-  };
 
   imports = [
     ./modules/git.nix
