@@ -43,24 +43,24 @@
   # plain files is through 'home.file'.
   home.file = {
       ".config/nvim" = {
-        source = "${config.home.homeDirectory}/.dotfiles/nvim";
-        target = "${config.home.homeDirectory}/.config/nvim";
+        source = "~/.dotfiles/nvim";
+        target = "~/.config/nvim";
       };
       yabai = {
-        source = "${config.home.homeDirectory}/.dotfiles/yabai";
-        target = "${config.home.homeDirectory}/.config/yabai";
+        source = "~/.dotfiles/yabai";
+        target = "~/.config/yabai";
       };
       skhd = {
-        source = "${config.home.homeDirectory}/.dotfiles/skhd";
-        target = "${config.home.homeDirectory}/.config/skhd";
+        source = "~/.dotfiles/skhd";
+        target = "~/.config/skhd";
       };
       "alacritty.toml" = {
-        source = "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
-        target = "${config.home.homeDirectory}/.config/alacritty.toml";
+        source = "~/.dotfiles/alacritty.toml";
+        target = "~/.config/alacritty.toml";
       };
       "starship.toml" = {
-        source = "${config.home.homeDirectory}/.dotfiles/starship.toml";
-        target = "${config.home.homeDirectory}/.config/starship.toml";
+        source = "~/.dotfiles/starship.toml";
+        target = "~/.config/starship.toml";
       };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
