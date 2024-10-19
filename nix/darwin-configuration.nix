@@ -20,7 +20,7 @@
   # nix.settings.always-allow-substitutes = true;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  # programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = false;  # default shell on catalina
   programs.fish.enable = true;
 
   # Set Git commit hash for darwin-version.
