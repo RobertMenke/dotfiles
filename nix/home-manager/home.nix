@@ -37,6 +37,11 @@
     fish
     alacritty
     git
+    zoxide
+    lsd
+    bat
+    direnv
+    ffmpeg-full
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
