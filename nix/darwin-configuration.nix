@@ -36,5 +36,6 @@
   users.users.rbmenke = {
     name = "rbmenke";
     home = "/Users/rbmenke";
+    shell = pkgs.fish;
   };
 }

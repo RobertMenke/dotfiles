@@ -34,7 +34,7 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    zsh
+    fish
     alacritty
     git
   ];
