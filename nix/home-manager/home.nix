@@ -54,8 +54,8 @@
         source = "${config.home.homeDirectory}/.dotfiles/skhd";
         target = "${config.home.homeDirectory}/.config/skhd";
       };
-      "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
-      "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/starship.toml";
+      "alacritty.toml".source = "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
+      "starship.toml".source = "${config.home.homeDirectory}/.dotfiles/starship.toml";
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
