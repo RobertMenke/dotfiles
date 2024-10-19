@@ -41,6 +41,8 @@
     bat
     direnv
     ffmpeg-full
+    cachix
+    jq
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

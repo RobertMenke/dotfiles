@@ -49,7 +49,7 @@
       '';
 
       functions = {
-        fish_greeting = "";
+        fish_greeting = "test";
         _prompt_move_to_bottom = {
           onEvent = "fish_postexec";
           body = "tput cup $LINES";
@@ -57,6 +57,4 @@
       };
     };
   };
-
-  home.packages = with pkgs; [ cachix jq ];
 }
