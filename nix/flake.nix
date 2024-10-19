@@ -18,6 +18,7 @@
   # with named access to the entire set of arguments - e.g. can use the variable inputs which 
   # refers to the entire attribute set
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
+    # Just keeping this here as an example even though the let binding isn't in use right now
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};

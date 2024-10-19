@@ -3,7 +3,8 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
-  home.homeDirectory = lib.mkForce "/Users/rbmenke";
+  # home.homeDirectory = lib.mkForce "/Users/rbmenke";
+  home.homeDirectory = "/Users/rbmenke";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -41,6 +42,10 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
+      ".config/nvim" = {
+        source = "${config.home.homeDirectory}/.dotfiles/nvim";
+        target = "${config.home.homeDirectory}/.config/nvim";
+      };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
@@ -79,7 +84,7 @@
   # Set up xdg config files
   xdg = {
     configFile = {
-      nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/nvim";
+      # nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/nvim";
       yabai.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/yabai";
       skhd.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/skhd";
       "alacritty.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
