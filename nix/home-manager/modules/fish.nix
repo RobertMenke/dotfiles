@@ -20,14 +20,9 @@
     fish = {
       enable = true;
 
-      # plugins = [{
-      #   name = "foreign-env";
-      #   inherit (pkgs.fishPlugins.foreign-env) src;
-      # }];
-
       shellAliases = {
         cat="bat";
-        fresh="clear && source ~/.zshrc";
+        fresh="clear && source ~/.config/fish/config.fish";
         equater-up="tmuxinator start equater";
         git-recent-branches="git for-each-ref --sort=-committerdate --count=10 refs/heads/";
       };
@@ -38,6 +33,8 @@
         if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]
           fenv source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
         end
+        # Initialize zoxide for Fish
+        zoxide init fish | source
       '';
 
       interactiveShellInit = ''
