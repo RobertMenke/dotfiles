@@ -3,7 +3,7 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
-  home.homeDirectory = lib.mkForce "/Users/rbmenke";
+  # home.homeDirectory = lib.mkForce "/Users/rbmenke";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
