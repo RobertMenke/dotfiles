@@ -49,24 +49,23 @@
   # plain files is through 'home.file'.
   home.file = {
       ".config/nvim" = {
-        # source = "${config.home.homeDirectory}/.dotfiles/nvim";
         source = ./../../nvim;
         target = "${config.home.homeDirectory}/.config/nvim";
       };
       yabai = {
-        source = "${config.home.homeDirectory}/.dotfiles/yabai";
+        source = ./../../yabai;
         target = "${config.home.homeDirectory}/.config/yabai";
       };
       skhd = {
-        source = "${config.home.homeDirectory}/.dotfiles/skhd";
+        source = ./../../skhd;
         target = "${config.home.homeDirectory}/.config/skhd";
       };
       "alacritty.toml" = {
-        source = "${config.home.homeDirectory}/.dotfiles/alacritty.toml";
+        source = ./../../alacritty.toml;
         target = "${config.home.homeDirectory}/.config/alacritty.toml";
       };
       "starship.toml" = {
-        source = "${config.home.homeDirectory}/.dotfiles/starship.toml";
+        source = ./../../starship.toml;
         target = "${config.home.homeDirectory}/.config/starship.toml";
       };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
