@@ -18,6 +18,8 @@
     };
 
     fish = {
+      # To actually change the shell, you need to run
+      # chsh -s /run/current-system/sw/bin/fish (this binary is the nix store symlink)
       enable = true;
 
       shellAliases = {
