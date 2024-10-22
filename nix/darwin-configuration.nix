@@ -38,7 +38,4 @@
     home = "/Users/rbmenke";
     shell = pkgs.fish;
   };
-
-  # Set fish as the default login shell for macOS
-  users.defaultShell = pkgs.fish;
 }
