@@ -104,7 +104,7 @@
   programs.home-manager.enable = true;
 
   # Optionally, set fish as your login shell
-  programs.home-manager.users.defaultShell = pkgs.fish;
+  home.shell = pkgs.fish;
 
   imports = [
     ./modules/git.nix
