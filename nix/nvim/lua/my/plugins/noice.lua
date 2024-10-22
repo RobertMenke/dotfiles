@@ -1,0 +1,51 @@
+-- Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
+return {
+  'folke/noice.nvim',
+  event = { 'BufReadPost', 'BufWritePost', 'BufNewFile' },
+  opts = {
+    -- Make noice's views transparent (doesn't seem to work)
+    views = {
+      mini = {
+        win_options = {
+          winblend = 0,
+        },
+        winhighlight = {},
+      },
+    },
+    -- Using fidget instead
+    lsp = {
+      progress = {
+        enabled = false,
+      },
+    },
+    routes = {
+      {
+        filter = {
+          event = 'msg_show',
+          any = {
+            { find = '%d+L, %d+B' },
+            { find = '; after #%d+' },
+            { find = '; before #%d+' },
+          },
+        },
+        view = 'mini',
+      },
+    },
+    presets = {
+      bottom_search = true,
+      command_palette = true,
+      long_message_to_split = true,
+      inc_rename = true,
+    },
+  },
+    -- stylua: ignore
+    keys = {
+      { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
+      { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
+      { "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
+      { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
+      { "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+      { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
+      { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
+    },
+}
