@@ -103,9 +103,6 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # Optionally, set fish as your login shell
-  home.shell = pkgs.fish;
-
   imports = [
     ./modules/git.nix
     ./modules/neovim.nix
