@@ -50,7 +50,7 @@
   home.file = {
       ".config/nvim" = {
         # source = "${config.home.homeDirectory}/.dotfiles/nvim";
-        source = ./../nvim;
+        source = ./../../nvim;
         target = "${config.home.homeDirectory}/.config/nvim";
       };
       yabai = {
