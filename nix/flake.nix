@@ -26,6 +26,9 @@
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
+      overlays = [
+        inputs.neovim-nightly-overlay.overlays.default
+      ];
     in {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#robert-mbp
@@ -36,9 +39,7 @@
           ./darwin-configuration.nix         
           home-manager.darwinModules.home-manager
           {
-            nixpkgs.overlays = [
-              inputs.neovim-nightly-overlay.overlays.default
-            ];
+            nixpkgs.overlays = overlays;
             # nixpkgs = nixpkgsConfig;
             # `home-manager` config
             home-manager.useGlobalPkgs = true;
