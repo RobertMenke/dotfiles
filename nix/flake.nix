@@ -36,6 +36,9 @@
           ./darwin-configuration.nix         
           home-manager.darwinModules.home-manager
           {
+            nixpkgs.overlays = [
+              inputs.neovim-nightly-overlay.overlays.default
+            ];
             # nixpkgs = nixpkgsConfig;
             # `home-manager` config
             home-manager.useGlobalPkgs = true;
