@@ -3,16 +3,17 @@
   # imports = [ <home-manager/nix-darwin> ];
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages =
+  environment.systemPackages = with pkgs;
     [ 
-      pkgs.vim
-      pkgs.neovim
+      vim
+      neovim
       # pkgs.cargo
-      pkgs.python3Full
-      pkgs.php
-      pkgs.nodePackages.nodejs
+      python3Full
+      php
+      nodePackages.nodejs
       # pkgs.rustc
-      pkgs.rustup
+      rustup
+      go
     ];
 
   # Auto upgrade nix package and the daemon service.
