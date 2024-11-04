@@ -10,7 +10,7 @@
       pkgs.cargo
       pkgs.python3Full
       pkgs.php
-      pkgs.nodejs_23
+      pkgs.nodePackages.nodejs
       pkgs.rustc
       pkgs.rustup
     ];
