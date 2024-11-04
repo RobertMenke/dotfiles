@@ -7,11 +7,11 @@
     [ 
       pkgs.vim
       pkgs.neovim
-      pkgs.cargo
+      # pkgs.cargo
       pkgs.python3Full
       pkgs.php
       pkgs.nodePackages.nodejs
-      pkgs.rustc
+      # pkgs.rustc
       pkgs.rustup
     ];
 
