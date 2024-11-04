@@ -8,7 +8,7 @@
       pkgs.vim
       pkgs.neovim
       pkgs.cargo
-      pkgs.python3full
+      pkgs.python3Full
       pkgs.php
       pkgs.nodejs_23
       pkgs.rustc
