@@ -40,6 +40,7 @@
     # '')
     alacritty
     tmux
+    tmuxinator
     git
     zoxide
     lsd
