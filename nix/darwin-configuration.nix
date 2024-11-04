@@ -7,6 +7,7 @@
     [ 
       pkgs.vim
       pkgs.neovim
+      pkgs.cargo
     ];
 
   # Auto upgrade nix package and the daemon service.

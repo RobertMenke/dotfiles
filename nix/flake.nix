@@ -42,7 +42,6 @@
           home-manager.darwinModules.home-manager
           {
             nixpkgs.overlays = overlays;
-            # nixpkgs = nixpkgsConfig;
             # `home-manager` config
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
