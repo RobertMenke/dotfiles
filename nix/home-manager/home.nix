@@ -1,10 +1,19 @@
-{ config, pkgs, lib, ... }:
+{ inputs, config, pkgs, lib, ... }:
 {  
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "rbmenke";
   home.homeDirectory = "/Users/rbmenke";
   # home.homeDirectory = lib.mkForce "/Users/rbmenke";
+
+  nixpkgs.overlays = [
+    # (final: prev:
+    #   (import ../packages {
+    #     inherit inputs;
+    #     inherit pkgs;
+    #   }))
+    inputs.neovim-nightly-overlay.overlays.default
+  ];
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
