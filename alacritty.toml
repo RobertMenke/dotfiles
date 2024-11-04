@@ -1,6 +1,6 @@
 # Start tmux on start
-# [shell]
-# program = "/bin/zsh"
+[shell]
+program = "/run/current-system/sw/bin/fish"
 # args = [ "-l", "-c", "tmux attach || tmux" ]
 
 # Themes: https://github.com/alacritty/alacritty-theme

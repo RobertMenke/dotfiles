@@ -32,9 +32,9 @@
       shellInit = ''
         # Source nix files, required to set fish as default shell, otherwise
         # it doesn't have the nix env vars
-        if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]
-          fenv source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
-        end
+        # if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]
+        #   fenv source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+        # end
         # Initialize zoxide for Fish
         zoxide init fish | source
       '';
