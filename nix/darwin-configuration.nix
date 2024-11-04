@@ -8,6 +8,11 @@
       pkgs.vim
       pkgs.neovim
       pkgs.cargo
+      pkgs.python3full
+      pkgs.php
+      pkgs.nodejs_23
+      pkgs.rustc
+      pkgs.rustup
     ];
 
   # Auto upgrade nix package and the daemon service.
