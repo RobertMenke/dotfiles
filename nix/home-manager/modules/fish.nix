@@ -3,6 +3,7 @@
     HOMEBREW_NO_ANALYTICS = "1";
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
     GOPATH = "$HOME/go";
+    TERM="xterm-256color";
   };
   programs = {
     btop = { enable = true; };

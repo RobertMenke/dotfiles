@@ -39,6 +39,7 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
     alacritty
+    tmux
     git
     zoxide
     lsd
