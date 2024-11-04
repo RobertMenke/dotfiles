@@ -7,11 +7,6 @@
   # home.homeDirectory = lib.mkForce "/Users/rbmenke";
 
   nixpkgs.overlays = [
-    # (final: prev:
-    #   (import ../packages {
-    #     inherit inputs;
-    #     inherit pkgs;
-    #   }))
     inputs.neovim-nightly-overlay.overlays.default
   ];
 
@@ -109,8 +104,13 @@
     # EDITOR = "emacs";
   };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  programs = {
+    # Let Home Manager install and manage itself.
+    home-manager.enable = true;
+    # Direnv integration for flakes
+    direnv.enable = true;
+    direnv.nix-direnv.enable = true;
+  };
 
   imports = [
     ./modules/git.nix
