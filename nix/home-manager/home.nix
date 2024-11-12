@@ -50,7 +50,7 @@
     cachix
     jq
   ] ++ lib.optional pkgs.stdenv.isDarwin [
-    yabai
+    pkgs.yabai
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
