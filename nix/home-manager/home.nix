@@ -49,7 +49,7 @@
     ffmpeg-full
     cachix
     jq
-  ] ++ lib.optional pkgs.stdenv.isDarwin [
+  ] ++ lib.optionals pkgs.stdenv.isDarwin [
     pkgs.yabai
   ];
 
