@@ -49,7 +49,9 @@
     ffmpeg-full
     cachix
     jq
-  ] ++ lib.optional pkgs.stdenv.isDarwin pkgs.yabai;
+  ] ++ lib.optional pkgs.stdenv.isDarwin [
+    yabai
+  ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
