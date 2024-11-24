@@ -21,9 +21,9 @@
       commit = { gpgsign = true; };
       gpg = {
         format = "ssh";
-      };
-      "gpg \"ssh\"" = {
-        program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+        ssh = {
+          program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+        };
       };
       core = {
         editor = "nvim";
