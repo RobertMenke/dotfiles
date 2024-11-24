@@ -10,8 +10,7 @@
       user = (if isPersonalMac then {
         name = "Robert Menke";
         email = "robert.b.menke@gmail.com";
-        signingKey =
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI";
+        signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI";
       } else if isWorkMac then {
         name = "Robert Menke";
         email = "robert.menke@agilebits.com";
