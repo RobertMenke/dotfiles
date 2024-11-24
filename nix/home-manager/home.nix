@@ -79,6 +79,14 @@ in {
         source = ./../../starship.toml;
         target = "${config.home.homeDirectory}/.config/starship.toml";
       };
+      "tmux.conf" = {
+        source = ./../../tmux.conf;
+        target = "${config.home.homeDirectory}/.tmux.conf";
+      };
+      "/usr/local/bin/fish" = {
+        source = pkgs.fish;
+        target = "/usr/local/bin/fish";
+      };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
