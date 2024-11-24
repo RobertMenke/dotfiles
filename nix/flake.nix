@@ -34,7 +34,7 @@
     in {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#robert-mbp
-      darwinConfigurations."robert-mbp" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."personal" = nix-darwin.lib.darwinSystem {
         # inherit system;
         system = "aarch64-darwin";
         modules = [ 
@@ -43,10 +43,55 @@
           {
             nixpkgs.overlays = overlays;
             # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.rbmenke = import ./home-manager/home.nix;            
-            home-manager.backupFileExtension = "bak";
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "bak";
+              users.robert = import ./home-manager/home.nix;
+              extraSpecialArgs = {
+                inherit inputs pkgs;
+                isDarwin = true;
+                isLinux = false;
+                configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+                isPersonalMac = true;
+                isWorkMac = false;
+              };
+            };
+          }
+        ];
+        specialArgs = {
+            inherit inputs pkgs;
+            isDarwin = true;
+            isLinux = false;
+            configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+            isPersonalMac = true;
+            isWorkMac = false;
+        };
+      };
+
+      darwinConfigurations."work" = nix-darwin.lib.darwinSystem {
+        # inherit system;
+        system = "aarch64-darwin";
+        modules = [ 
+          ./darwin-configuration.nix         
+          home-manager.darwinModules.home-manager
+          {
+            nixpkgs.overlays = overlays;
+            # `home-manager` config
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "bak";
+              users.robertmenke = import ./home-manager/home.nix;
+              extraSpecialArgs = {
+                inherit inputs pkgs;
+                isDarwin = true;
+                isLinux = false;
+                configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+                isPersonalMac = false;
+                isWorkMac = true;
+              };
+            };
           }
         ];
         specialArgs = {
@@ -54,13 +99,15 @@
             isDarwin = true;
             isLinux = false;
             configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+            isPersonalMac = false;
+            isWorkMac = true;
         };
       };
 
       # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."robert-mbp".pkgs;
+      # darwinPackages = self.darwinConfigurations."robert-mbp".pkgs;
 
-      # homeConfigurations."rbmenke" = home-manager.lib.homeManagerConfiguration {
+      # homeConfigurations."robert" = home-manager.lib.homeManagerConfiguration {
       #   inherit pkgs;
       #
       #   # Specify your home configuration modules here, for example,

@@ -1,4 +1,5 @@
-{ pkgs, lib, isDarwin, isLinux, ... }: {
+{ pkgs, lib, isPersonalMac, isWorkMac, ... }: 
+{
   home.sessionVariables = {
     HOMEBREW_NO_ANALYTICS = "1";
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
@@ -19,16 +20,24 @@
     };
 
     fish = {
-      # To actually change the shell, you need to run
-      # chsh -s /run/current-system/sw/bin/fish (this binary is the nix store symlink)
       enable = true;
 
       shellAliases = {
+        # Add default aliases
         cat="bat";
         fresh="clear && source ~/.config/fish/config.fish";
-        equater-up="tmuxinator start equater";
         git-recent-branches="git for-each-ref --sort=-committerdate --count=10 refs/heads/";
-      };
+        git-log="git log --graph --pretty=format:'%Cred%h%Creset - %G? -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
+      } // (if isPersonalMac then {
+        # Add personal aliases
+        equater-up="tmuxinator start equater";
+      } else if isWorkMac then {
+        # Add work aliases
+        tail-packaged-oph-logs="tail -f $HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/Library/Application\ Support/1Password/Data/debug/logs/1Password_rCURRENT.log";
+        dbdir="z $HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/Library/Application\ Support/1Password/Data";
+        deriveddata="z $HOME/Library/Developer/Xcode/DerivedData";
+        dev="tmuxinator start config && tmuxinator start b5 && tmuxinator start core";
+      } else {});
 
       shellInit = ''
         # Source nix files, required to set fish as default shell, otherwise

@@ -1,4 +1,4 @@
-{ pkgs, isDarwin, isLinux, ... }:
+{ pkgs, isDarwin, isLinux, isPersonalMac, isWorkMac, ... }:
 {
   programs.git = {
     enable = true;
@@ -7,12 +7,16 @@
     };
     ignores = [ ".DS_Store" ".direnv/" ];
     extraConfig = {
-      user = {
+      user = (if isPersonalMac then {
         name = "Robert Menke";
         email = "robert.b.menke@gmail.com";
         signingKey =
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI";
-      };
+      } else if isWorkMac then {
+        name = "Robert Menke";
+        email = "robert.menke@agilebits.com";
+        signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE18t5Zu74f0MuYAC01F9Fj9bVMlnrYBL/DDvEhJ2jYp";
+      } else {});
       pull = { rebase = false; };
       commit = { gpgsign = true; };
       gpg = {

@@ -1,10 +1,13 @@
-{ inputs, config, pkgs, lib, ... }:
-{  
+{ inputs, config, pkgs, lib, isPersonalMac, isWorkMac, ... }:
+let 
+  # Differentiating between work and personal
+  username = if isPersonalMac then "robert" else if isWorkMac then "robertmenke" else "";
+  homeDirectory = if isPersonalMac then "/Users/robert" else if isWorkMac then "/Users/robertmenke" else "";
+in {  
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "rbmenke";
-  home.homeDirectory = "/Users/rbmenke";
-  # home.homeDirectory = lib.mkForce "/Users/rbmenke";
+  home.username = username;
+  home.homeDirectory = homeDirectory;
 
   nixpkgs.overlays = [
     inputs.neovim-nightly-overlay.overlays.default
@@ -102,7 +105,7 @@
   #
   # or
   #
-  #  /etc/profiles/per-user/rbmenke/etc/profile.d/hm-session-vars.sh
+  #  /etc/profiles/per-user/robert/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
     # EDITOR = "emacs";

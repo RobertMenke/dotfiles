@@ -1,5 +1,12 @@
-{ configurationRevision, nixpkgs, pkgs, ... }:
-{
+{ configurationRevision, nixpkgs, pkgs, isWorkMac, isPersonalMac, ... }:
+let 
+  username = if isPersonalMac then "robert" else if isWorkMac then "robertmenke" else "";
+  shellConfig = {
+      name = username;
+      home = "/Users/${username}";
+      shell = pkgs.fish;
+  };
+in {
   # imports = [ <home-manager/nix-darwin> ];
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -40,9 +47,15 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  users.users.rbmenke = {
-    name = "rbmenke";
-    home = "/Users/rbmenke";
-    shell = pkgs.fish;
-  };
+  users.users = (if isPersonalMac then {
+      robert = shellConfig;
+    } else if isWorkMac then {
+      robertmenke = shellConfig;
+    } else {}
+  );
+  # users.users.${username} = {
+  #   name = username;
+  #   home = "/Users/${username}";
+  #   shell = pkgs.fish;
+  # };
 }
