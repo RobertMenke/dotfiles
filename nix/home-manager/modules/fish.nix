@@ -47,6 +47,7 @@
         # end
         # Initialize zoxide for Fish
         zoxide init fish | source
+        starship init fish | source
         eval (direnv hook fish)
       '';
 

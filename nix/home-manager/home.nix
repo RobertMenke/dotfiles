@@ -52,8 +52,11 @@ in {
     ffmpeg-full
     cachix
     jq
+    starship
+    ripgrep
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
     pkgs.yabai
+    pkgs.skhd
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
