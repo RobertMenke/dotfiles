@@ -5,7 +5,12 @@
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
     GOPATH = "$HOME/go";
     TERM="xterm-256color";
-  };
+  } // (if isWorkMac then {
+    GITLAB_TOKEN = "op://Employee/sc3uuibeo6hjh3rwc5sy6qep4u/credential";
+  } else {
+    HELLO_WORLD = "hello world";
+  });
+
   programs = {
     btop = { enable = true; };
 
@@ -22,6 +27,7 @@
     fish = {
       enable = true;
 
+      
       shellAliases = {
         # Add default aliases
         cat="bat";
@@ -37,6 +43,7 @@
         dbdir="z $HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/Library/Application\ Support/1Password/Data";
         deriveddata="z $HOME/Library/Developer/Xcode/DerivedData";
         dev="tmuxinator start config && tmuxinator start b5 && tmuxinator start core";
+        yarn="op run --account agilebits --no-masking -- yarn";
       } else {});
 
       shellInit = ''
