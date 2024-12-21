@@ -1,5 +1,5 @@
+require 'my.bootstrap-lazy'
 require 'my.options'
 require 'my.autocommands'
 require 'my.keymap'
-require 'my.bootstrap-lazy'
 require 'my.plugins'

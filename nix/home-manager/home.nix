@@ -54,34 +54,52 @@ in {
     jq
     starship
     ripgrep
+    yazi
+    imagemagick
+    tealdeer
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    pkgs.yabai
-    pkgs.skhd
+     pkgs.yabai
+     pkgs.skhd
   ];
+
+  xdg.configFile = {
+    ripgrep_ignore.text = ''
+      .git/
+      yarn.lock
+      package-lock.json
+      packer_compiled.lua
+      .DS_Store
+      .netrwhist
+      dist/
+      node_modules/
+      **/node_modules/
+      wget-log
+      wget-log.*
+      /vendor
+    '';
+    nvim = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
+      recursive = true;
+    };
+    yabai = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/yabai";
+      recursive = true;
+    };
+    skhd = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd";
+      recursive = true;
+    };
+    "alacritty.toml" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty.toml";
+    };
+    "starship.toml" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship.toml";
+    };
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-      ".config/nvim" = {
-        source = ./../../nvim;
-        target = "${config.home.homeDirectory}/.config/nvim";
-      };
-      yabai = {
-        source = ./../../yabai;
-        target = "${config.home.homeDirectory}/.config/yabai";
-      };
-      skhd = {
-        source = ./../../skhd;
-        target = "${config.home.homeDirectory}/.config/skhd";
-      };
-      "alacritty.toml" = {
-        source = ./../../alacritty.toml;
-        target = "${config.home.homeDirectory}/.config/alacritty.toml";
-      };
-      "starship.toml" = {
-        source = ./../../starship.toml;
-        target = "${config.home.homeDirectory}/.config/starship.toml";
-      };
       "tmux.conf" = {
         source = ./../../tmux.conf;
         target = "${config.home.homeDirectory}/.tmux.conf";

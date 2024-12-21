@@ -24,9 +24,9 @@ in {
   # Enable yabai and skhd services
   # https://github.com/LnL7/nix-darwin/blob/f0dd0838c3558b59dc3b726d8ab89f5b5e35c297/modules/services/yabai/default.nix#L44
   services = {
-    yabai = { 
+     yabai = {
       enable = true;
-      enableScriptingAddition = true;
+      enableScriptingAddition = false;
     };
     skhd.enable = true;
   };

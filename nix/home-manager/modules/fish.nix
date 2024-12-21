@@ -70,7 +70,21 @@
       '';
 
       functions = {
-        fish_greeting = "test";
+        y = {
+          description = "yazi";
+          body = ''
+          	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+            yazi $argv --cwd-file="$tmp"
+            if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+              builtin cd -- "$cwd"
+            end
+            rm -f -- "$tmp"
+          '';
+        };
+        fish_greeting = {
+            description = "test function";
+            body = "echo 'hello world'";
+        };
         _prompt_move_to_bottom = {
           onEvent = "fish_postexec";
           body = "tput cup $LINES";
