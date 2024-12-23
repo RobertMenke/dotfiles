@@ -37,7 +37,6 @@ require('lazy').setup {
   require 'my.plugins.languages.neodev',
   require 'my.plugins.diffview',
   require 'my.plugins.oil',
-  require 'my.plugins.ufo',
  -- require 'my.airblade.vim-rooter',
   -- Language-specific plugins
   -- Rust:

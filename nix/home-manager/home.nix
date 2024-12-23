@@ -62,38 +62,41 @@ in {
      pkgs.skhd
   ];
 
-  xdg.configFile = {
-    ripgrep_ignore.text = ''
-      .git/
-      yarn.lock
-      package-lock.json
-      packer_compiled.lua
-      .DS_Store
-      .netrwhist
-      dist/
-      node_modules/
-      **/node_modules/
-      wget-log
-      wget-log.*
-      /vendor
-    '';
-    nvim = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
-      recursive = true;
-    };
-    yabai = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/yabai";
-      recursive = true;
-    };
-    skhd = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd";
-      recursive = true;
-    };
-    "alacritty.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty.toml";
-    };
-    "starship.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship.toml";
+  xdg = {
+    enable = true;
+    configFile = {
+      ripgrep_ignore.text = ''
+        .git/
+        yarn.lock
+        package-lock.json
+        packer_compiled.lua
+        .DS_Store
+        .netrwhist
+        dist/
+        node_modules/
+        **/node_modules/
+        wget-log
+        wget-log.*
+        /vendor
+      '';
+      nvim = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
+        recursive = true;
+      };
+      yabai = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/yabai";
+        recursive = true;
+      };
+      skhd = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd";
+        recursive = true;
+      };
+      "alacritty.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty.toml";
+      };
+      "starship.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship.toml";
+      };
     };
   };
 
