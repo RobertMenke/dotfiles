@@ -70,6 +70,10 @@
       '';
 
       functions = {
+        fish_greeting = {
+          description = "Override the default greeting";
+          body = "";
+        };
         y = {
           description = "yazi";
           body = ''
@@ -80,10 +84,6 @@
             end
             rm -f -- "$tmp"
           '';
-        };
-        fish_greeting = {
-            description = "test function";
-            body = "echo 'hello world'";
         };
         _prompt_move_to_bottom = {
           onEvent = "fish_postexec";

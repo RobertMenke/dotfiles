@@ -57,6 +57,7 @@ in {
     yazi
     imagemagick
     tealdeer
+    neofetch
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
      pkgs.skhd
