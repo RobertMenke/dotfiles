@@ -30,15 +30,15 @@ return {
       options = {
         theme = bubbles_theme,
         component_separators = '',
-        section_separators = '',
+        -- section_separators = '',
         -- Alacritty has a bug rendering these fonts, womp womp
-        -- section_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
       },
       sections = {
         lualine_a = {
           {
             'mode',
-            -- separator = { left = '' } --[[ , right_padding = 2 ]],
+            separator = { left = '' } --[[ , right_padding = 2 ]],
           },
         },
         lualine_b = { { 'filename', path = 1 }, 'branch' },
@@ -50,7 +50,7 @@ return {
         lualine_z = {
           {
             'location',
-            -- separator = { right = '' } --[[ , left_padding = 2 ]],
+            separator = { right = '' } --[[ , left_padding = 2 ]],
           },
         },
       },

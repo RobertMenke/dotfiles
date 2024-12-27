@@ -1,0 +1,44 @@
+# Font
+font-family = "JetBrainsMono Nerd Font"
+font-style = "JetBrainsMono Nerd Font"
+font-style-bold = "JetBrainsMono Nerd Font"
+font-style-italic = "JetBrainsMono Nerd Font"
+font-style-bold-italic = "JetBrainsMono Nerd Font"
+font-size = 15
+font-variation = wght=800
+font-variation-bold = wght=800
+font-variation-italic = wght=800
+font-variation-bold-italic = wght=800
+font-thicken = true
+
+# Cursor
+cursor-style-blink = false
+cursor-style = underline
+
+# Theme/colors/background
+theme = "Kanagawa Dragon"
+background-opacity = 0.9
+background-blur-radius = 40
+
+# Startup command
+command = /run/current-system/sw/bin/fish
+initial-command = /run/current-system/sw/bin/fish
+shell-integration = fish
+
+# Window
+window-decoration = false
+window-padding-x = 5
+adjust-cell-height = 4
+
+# Mac icon
+#macos-icon = custom-style
+#macos-icon-frame = plastic
+#macos-icon-ghost-color = #fafbfb
+#macos-icon-ghost-color = #6f15e2
+#macos-icon-screen-color = #6f15e2
+
+# Environment
+term = "xterm-256color"
+
+# Ghostty behavior
+confirm-close-surface = false
