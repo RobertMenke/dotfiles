@@ -56,6 +56,9 @@ in {
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
+  
+  fonts.packages = with pkgs; [ nerdfonts ];
+
   users.users = (if isPersonalMac then {
       robert = shellConfig;
     } else if isWorkMac then {
