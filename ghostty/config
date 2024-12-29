@@ -1,9 +1,9 @@
 # Font
-font-family = "JetBrainsMono Nerd Font"
-font-style = "JetBrainsMono Nerd Font"
-font-style-bold = "JetBrainsMono Nerd Font"
-font-style-italic = "JetBrainsMono Nerd Font"
-font-style-bold-italic = "JetBrainsMono Nerd Font"
+font-family = JetBrainsMono Nerd Font
+font-style = JetBrainsMono Nerd Font
+font-style-bold = JetBrainsMono Nerd Font
+font-style-italic = JetBrainsMono Nerd Font
+font-style-bold-italic = JetBrainsMono Nerd Font
 font-size = 15
 font-variation = wght=800
 font-variation-bold = wght=800
@@ -13,10 +13,9 @@ font-thicken = true
 
 # Cursor
 cursor-style-blink = false
-cursor-style = underline
 
 # Theme/colors/background
-theme = "Kanagawa Dragon"
+theme = Kanagawa Dragon
 background-opacity = 0.9
 background-blur-radius = 40
 
@@ -28,7 +27,7 @@ shell-integration = fish
 # Window
 window-decoration = false
 window-padding-x = 5
-adjust-cell-height = 4
+adjust-cell-height = 25%
 
 # Mac icon
 #macos-icon = custom-style

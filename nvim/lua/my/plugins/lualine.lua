@@ -16,8 +16,14 @@ return {
         a = { bg = theme.diag.ok, fg = theme.ui.bg },
         b = { bg = theme.ui.bg, fg = theme.diag.ok },
       },
-      visual = { a = { bg = theme.syn.keyword, fg = theme.ui.bg }, b = { bg = theme.ui.bg, fg = theme.syn.keyword } },
-      replace = { a = { bg = theme.syn.constant, fg = theme.ui.bg }, b = { bg = theme.ui.bg, fg = theme.syn.constant } },
+      visual = {
+        a = { bg = theme.syn.keyword, fg = theme.ui.bg },
+        b = { bg = theme.ui.bg, fg = theme.syn.keyword }
+      },
+      replace = {
+        a = { bg = theme.syn.constant, fg = theme.ui.bg },
+        b = { bg = theme.ui.bg, fg = theme.syn.constant }
+      },
 
       inactive = {
         a = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
@@ -38,7 +44,8 @@ return {
         lualine_a = {
           {
             'mode',
-            separator = { left = '' } --[[ , right_padding = 2 ]],
+            separator = { left = '' },
+            right_padding = 2,
           },
         },
         lualine_b = { { 'filename', path = 1 }, 'branch' },
@@ -50,7 +57,8 @@ return {
         lualine_z = {
           {
             'location',
-            separator = { right = '' } --[[ , left_padding = 2 ]],
+            separator = { right = '' },
+            left_padding = 2,
           },
         },
       },
