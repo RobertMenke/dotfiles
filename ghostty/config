@@ -11,6 +11,11 @@ font-variation-italic = wght=800
 font-variation-bold-italic = wght=800
 font-thicken = true
 
+font-style = Bold
+font-style-bold = ExtraBold
+font-style-italic = Bold Italic
+font-style-bold-italic = ExtraBold Italic
+
 # Cursor
 cursor-style-blink = false
 
