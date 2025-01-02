@@ -9,7 +9,7 @@ font-variation = wght=800
 font-variation-bold = wght=800
 font-variation-italic = wght=800
 font-variation-bold-italic = wght=800
-font-thicken = true
+font-thicken = false
 
 font-style = Bold
 font-style-bold = ExtraBold

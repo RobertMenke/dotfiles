@@ -63,6 +63,10 @@ in {
      pkgs.skhd
   ];
 
+  home.sessionPath = [] ++ lib.optionals pkgs.stdenv.isDarwin [
+    "/Applications/Ghostty.app/Contents/MacOS"
+  ];
+
   xdg = {
     enable = true;
     configFile = {
