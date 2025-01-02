@@ -58,6 +58,8 @@ in {
     imagemagick
     tealdeer
     neofetch
+    # python package manager
+    uv
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
      pkgs.skhd
