@@ -11,6 +11,10 @@
     HELLO_WORLD = "hello world";
   });
 
+  home.sessionPath = [
+    "$HOME/go/bin"
+  ];
+
   programs = {
     btop = { enable = true; };
 
