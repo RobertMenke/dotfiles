@@ -61,9 +61,6 @@
       interactiveShellInit = ''
         fish_vi_key_bindings
         bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
-        # Bind Ctrl+L to accept the currently displayed autosuggestion
-        bind \cg accept-autosuggestion
-        bind \cl 'commandline -f accept-autosuggestion'
 
         # I like to keep the prompt at the bottom rather than the top
         # of the terminal window so that running `clear` doesn't make
@@ -80,7 +77,7 @@
         fish_user_key_bindings = {
           description = "A function automatically invoked by fish to set up key bindings";
           body = ''
-            bind \cY 'commandline -f accept-autosuggestion'
+            bind \cY accept-autosuggestion
             # Press Ctrl+N to move to the next completion in the menu
             bind \cn 'commandline -f next-complete'
             # Press Ctrl+P to move to the previous completion in the menu
