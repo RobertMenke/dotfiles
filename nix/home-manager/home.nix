@@ -119,6 +119,10 @@ in {
         source = ./../../tmux.conf;
         target = "${config.home.homeDirectory}/.tmux.conf";
       };
+      "bubbles.tmux" = {
+        source = ./../../bubbles.tmux;
+        target = "${config.home.homeDirectory}/bubbles.tmux";
+      };
       # Symlink fish to .local/bin so that we can specify it as the default shell in .tmux.conf without reference to the username
       ".local/bin/fish" = {
         source = "${pkgs.fish}/bin/fish";
