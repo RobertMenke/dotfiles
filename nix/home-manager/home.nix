@@ -58,6 +58,7 @@ in {
     imagemagick
     tealdeer
     neofetch
+    ruby
     # python package manager
     uv
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
