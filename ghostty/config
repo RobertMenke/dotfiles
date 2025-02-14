@@ -35,6 +35,7 @@ window-padding-x = 5
 adjust-cell-height = 25%
 
 # Mac icon
+macos-icon = xray
 #macos-icon = custom-style
 #macos-icon-frame = plastic
 #macos-icon-ghost-color = #fafbfb
