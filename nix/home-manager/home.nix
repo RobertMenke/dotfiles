@@ -42,6 +42,7 @@ in {
     #   echo "Hello, ${config.home.username}!"
     # '')
     alacritty
+    awscli2
     tmux
     tmuxinator
     git
