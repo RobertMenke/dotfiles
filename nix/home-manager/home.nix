@@ -43,6 +43,7 @@ in {
     # '')
     alacritty
     awscli2
+    granted
     tmux
     tmuxinator
     git
