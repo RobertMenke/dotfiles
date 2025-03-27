@@ -33,7 +33,6 @@ in {
 
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
   # Necessary for using flakes on this system.
@@ -52,12 +51,12 @@ in {
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 5;
+  ids.gids.nixbld = 30000;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  
-  fonts.packages = with pkgs; [ nerdfonts ];
+  fonts.packages = with pkgs; [ nerd-fonts.jetbrains-mono ];
 
   users.users = (if isPersonalMac then {
       robert = shellConfig;

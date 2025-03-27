@@ -44,7 +44,7 @@
             nixpkgs.overlays = overlays;
             # `home-manager` config
             home-manager = {
-              useGlobalPkgs = true;
+              # useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "bak";
               users.robert = import ./home-manager/home.nix;
@@ -79,7 +79,7 @@
             nixpkgs.overlays = overlays;
             # `home-manager` config
             home-manager = {
-              useGlobalPkgs = true;
+              # useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "bak";
               users.robertmenke = import ./home-manager/home.nix;
