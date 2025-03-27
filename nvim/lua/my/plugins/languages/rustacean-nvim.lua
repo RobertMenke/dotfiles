@@ -5,6 +5,7 @@ return {
   ft = { 'rust' },
   opts = {
     server = {
+      cmd = { vim.env.NVIM_RUST_ANALYZER },
       on_attach = function(_, bufnr)
         vim.keymap.set('n', '<leader>cR', function()
           vim.cmd.RustLsp 'codeAction'

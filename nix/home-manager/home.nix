@@ -61,6 +61,7 @@ in {
     tealdeer
     neofetch
     ruby
+    rust-analyzer
     # python package manager
     uv
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
@@ -71,6 +72,7 @@ in {
   home.sessionPath = [] ++ lib.optionals pkgs.stdenv.isDarwin [
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
+    "$HOME/Applications/GoLand.app/Contents/MacOS"
   ];
 
   xdg = {
