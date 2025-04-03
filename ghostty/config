@@ -16,9 +16,6 @@ font-style-bold = ExtraBold
 font-style-italic = Bold Italic
 font-style-bold-italic = ExtraBold Italic
 
-# Cursor
-cursor-style-blink = false
-
 # Theme/colors/background
 theme = Kanagawa Dragon
 background-opacity = 0.9
@@ -28,6 +25,11 @@ background-blur-radius = 40
 command = /run/current-system/sw/bin/fish
 initial-command = /run/current-system/sw/bin/fish
 shell-integration = fish
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
 
 # Window
 window-decoration = false
