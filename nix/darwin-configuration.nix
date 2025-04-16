@@ -15,7 +15,7 @@ in {
       vim
       neovim
       python3Full
-      php
+      #php
       nodePackages.nodejs
       rustup
       go
@@ -51,7 +51,8 @@ in {
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 5;
-  ids.gids.nixbld = 30000;
+  # ids.gids.nixbld = 30000;
+  ids.gids.nixbld = 350;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
