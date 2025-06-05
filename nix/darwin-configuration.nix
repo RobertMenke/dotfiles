@@ -6,6 +6,8 @@ let
       home = "/Users/${username}";
       shell = pkgs.fish;
   };
+  # Hack to avoid having to uninstall nix on work mac :(
+  blkid = if isPersonalMac then 350 else 30000;
 in {
   # imports = [ <home-manager/nix-darwin> ];
   # List packages installed in system profile. To search by name, run:
@@ -52,7 +54,7 @@ in {
   # $ darwin-rebuild changelog
   system.stateVersion = 5;
   # ids.gids.nixbld = 30000;
-  ids.gids.nixbld = 350;
+  ids.gids.nixbld = blkid;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
