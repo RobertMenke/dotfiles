@@ -16,7 +16,7 @@
 
     lsd = {
       enable = true;
-      enableAliases = true;
+      enableFishIntegration = true;
       settings = {
         sorting = { dir-grouping = "first"; };
         icons = { when = "always"; };
