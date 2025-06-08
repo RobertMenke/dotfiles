@@ -67,6 +67,8 @@ in {
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
      pkgs.skhd
+  ] ++ lib.optionals isPersonalMac [
+     pkgs.atuin
   ];
 
   home.sessionPath = [] ++ lib.optionals pkgs.stdenv.isDarwin [
