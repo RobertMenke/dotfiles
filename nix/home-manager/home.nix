@@ -75,6 +75,8 @@ in {
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
+  ] ++ lib.optionals isWorkMac [
+    "/Users/robertmenke/.dotnet/tools"
   ];
 
   xdg = {
