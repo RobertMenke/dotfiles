@@ -138,6 +138,10 @@ in {
         source = ./../../vscode/settings.json;
         target = "${config.home.homeDirectory}/Library/Application Support/Code/User/settings.json";
       };
+      "keybindings.json" = {
+        source = ./../../vscode/keybindings.json;
+        target = "${config.home.homeDirectory}/Library/Application Support/Code/User/keybindings.json";
+      };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.

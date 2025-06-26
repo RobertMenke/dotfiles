@@ -1,0 +1,29 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+  {
+    "key": "alt+t",
+    "command": "terminal.toggle"
+  },
+  {
+    "key": "ctrl+alt+t",
+    "command": "-terminal.toggle"
+  },
+  {
+    "key": "alt+p",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "g d",
+    "command": "editor.action.revealDefinition",
+    "when": "editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "g r",
+    "command": "editor.action.referenceSearch.trigger",
+    "when": "editorTextFocus && vim.mode == 'Normal'"
+  }
+]
