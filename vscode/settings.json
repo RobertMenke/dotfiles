@@ -32,11 +32,11 @@
     },
     {
       "before": ["g", "i"],
-      "commands": "editor.action.goToImplementation"
+      "commands": ["editor.action.goToImplementation"]
     },
     {
       "before": ["g", "D"],
-      "commands": "editor.action.revealDeclaration"
+      "commands": ["editor.action.revealDeclaration"]
     }
   ],
   "editor.formatOnPaste": true,
