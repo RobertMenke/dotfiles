@@ -133,6 +133,11 @@ in {
         source = "${pkgs.fish}/bin/fish";
         target = "${config.home.homeDirectory}/.local/bin/fish";
       };
+      # VSCode
+      "settings.json" = {
+        source = ./../../vscode/settings.json;
+        target = "${config.home.homeDirectory}/Library/Application Support/Code/User/settings.json";
+      };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.

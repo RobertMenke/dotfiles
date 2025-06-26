@@ -1,0 +1,49 @@
+{
+  "editor.accessibilitySupport": "off",
+  "files.autoSave": "afterDelay",
+  "debug.console.closeOnEnd": true,
+  "editor.formatOnSave": true,
+  "debug.allowBreakpointsEverywhere": true,
+  "C_Cpp.updateChannel": "Insiders",
+  "editor.fontSize": 14,
+  "editor.fontFamily": "JetBrains Mono",
+  "extensions.webWorker": true,
+  "terminal.external.osxExec": "iTerm.app",
+  "scm.inputFontSize": 14,
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontFamily": "JetBrains Mono",
+  "terminal.integrated.env.osx": {
+    "FIG_NEW_SESSION": "1",
+    "CW_NEW_SESSION": "1",
+    "Q_NEW_SESSION": "1"
+  },
+  "editor.minimap.enabled": false,
+  "vim.leader": " ",
+  "vim.vimrc.path": "$HOME/.ideavimrc",
+  "vim.vimrc.enable": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "[rust]": {
+    "editor.defaultFormatter": "matklad.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "workbench.colorCustomizations": {},
+  "editor.tokenColorCustomizations": {
+    "[Nord]": {
+      "textMateRules": [
+        {
+          // https://github.com/microsoft/vscode/blob/96410ff870b01dbe043cbc5f025af3ec19b8ca2e/extensions/rust/syntaxes/rust.tmLanguage.json#L83
+          "scope": "meta.attribute.rust",
+          "settings": {
+            "foreground": "#D08770",
+            "fontStyle": ""
+          }
+        }
+      ]
+    }
+  },
+  "rust-analyzer.rustfmt.rangeFormatting.enable": true,
+  "vim.digraphs": {
+    
+  }
+}
