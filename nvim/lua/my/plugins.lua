@@ -29,7 +29,7 @@ require('lazy').setup {
   -- require 'my.plugins.copilot',
   require 'my.plugins.dashboard',
   require 'my.plugins.lualine',
-  require 'my.plugins.lsp-status',
+  --require 'my.plugins.lsp-status',
   require 'my.plugins.neogit',
   require 'my.plugins.gitsigns',
   require 'my.plugins.indent-scope',
