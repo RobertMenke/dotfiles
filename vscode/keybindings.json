@@ -17,26 +17,6 @@
     "command": "-workbench.action.toggleSidebarVisibility"
   },
   {
-    "key": "g d",
-    "command": "editor.action.revealDefinition",
-    "when": "editorTextFocus && vim.mode == 'Normal'"
-  },
-  {
-    "key": "g r",
-    "command": "editor.action.referenceSearch.trigger",
-    "when": "editorTextFocus && vim.mode == 'Normal'"
-  },
-  {
-    "key": "g i",
-    "command": "editor.action.goToImplementation",
-    "when": "editorTextFocus && vim.mode == 'Normal'"
-  },
-  {
-    "key": "g D",
-    "command": "editor.action.revealDeclaration",
-    "when": "editorTextFocus && vim.mode == 'Normal'"
-  },
-  {
     "key": "ctrl+v",
     "command": "workbench.action.splitEditorRight",
     "when": "editorTextFocus && vim.mode == 'Normal'"

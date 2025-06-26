@@ -21,6 +21,24 @@
   "vim.leader": " ",
   "vim.vimrc.path": "$HOME/.ideavimrc",
   "vim.vimrc.enable": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["g", "d"],
+      "commands": ["editor.action.revealDefinition"]
+    },
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.referenceSearch.trigger"]
+    },
+    {
+      "before": ["g", "i"],
+      "commands": "editor.action.goToImplementation"
+    },
+    {
+      "before": ["g", "D"],
+      "commands": "editor.action.revealDeclaration"
+    }
+  ],
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
   "[rust]": {
@@ -43,7 +61,5 @@
     }
   },
   "rust-analyzer.rustfmt.rangeFormatting.enable": true,
-  "vim.digraphs": {
-    
-  }
+  "vim.digraphs": {}
 }
