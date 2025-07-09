@@ -45,5 +45,15 @@
     "key": "ctrl+k",
     "command": "workbench.action.focusAboveGroup",
     "when": "editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack",
+    "when": "editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "workbench.action.navigateForward",
+    "when": "editorTextFocus && vim.mode == 'Normal'"
   }
 ]
