@@ -64,6 +64,7 @@ in {
     rust-analyzer
     # python package manager
     uv
+    fzf
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
      pkgs.skhd
