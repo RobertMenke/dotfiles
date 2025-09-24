@@ -3,14 +3,16 @@ let
   sshAuthSock = "${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
 in {
   programs.ssh = {
+    enableDefaultConfig = false;
     enable = true;
-      forwardAgent = true;
       matchBlocks = {
         "gitlab.1password.io" = {
+          forwardAgent = true;
           port = 2227;
           hostname = "ssh.gitlab.1password.io";
         };
         "*.gitlab.1password.io" = {
+          forwardAgent = true;
           port = 2227;
           hostname = "ssh.gitlab.1password.io";
         };
