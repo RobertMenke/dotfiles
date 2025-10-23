@@ -65,6 +65,7 @@ in {
     # python package manager
     uv
     fzf
+    claude-code
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
      pkgs.skhd
@@ -189,5 +190,6 @@ in {
     ./modules/fish.nix
     ./modules/bat.nix
     ./modules/ssh.nix
+    ./modules/opencode.nix
   ];
 }
