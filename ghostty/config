@@ -49,3 +49,4 @@ term = "xterm-256color"
 
 # Ghostty behavior
 confirm-close-surface = false
+keybind = shift+enter=text:\x1b\r
