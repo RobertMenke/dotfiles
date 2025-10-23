@@ -1,5 +1,10 @@
 
 { inputs, config, pkgs, lib, ... }:
 {
-  programs.opencode.enable = true;
+  programs.opencode = {
+    enable = true;
+    settings = {
+      provider = "opencode";
+    };
+  };
 }
