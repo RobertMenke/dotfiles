@@ -3,8 +3,5 @@
 {
   programs.opencode = {
     enable = true;
-    settings = {
-      provider = "opencode";
-    };
   };
 }
