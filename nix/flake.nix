@@ -27,7 +27,14 @@
     # Just keeping this here as an example even though the let binding isn't in use right now
     let
       system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = pkg: true;
+          # … any of your other config
+        };
+      };
       overlays = [
         inputs.neovim-nightly-overlay.overlays.default
       ];
