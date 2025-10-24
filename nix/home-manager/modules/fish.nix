@@ -6,7 +6,8 @@
     GOPATH = "$HOME/go";
     TERM="xterm-256color";
   } // (if isWorkMac then {
-    GITLAB_TOKEN = "op://Employee/sc3uuibeo6hjh3rwc5sy6qep4u/credential";
+    GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
+    GOPRIVATE = "gitlab.1password.io,go.1password.io,proto.1password.dev";
   } else {
     HELLO_WORLD = "hello world";
   });

@@ -73,6 +73,7 @@ in {
     uv
     fzf
     claude-code
+    mirrord
     # opencode
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
