@@ -4,9 +4,9 @@
     HOMEBREW_NO_ANALYTICS = "1";
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
     GOPATH = "$HOME/go";
-    TERM="xterm-256color";
+    TERM = "xterm-256color";
   } // (if isWorkMac then {
-    GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
+    GITLAB_TOKEN = "op://Employee/sc3uuibeo6hjh3rwc5sy6qep4u/credential";
     GOPRIVATE = "gitlab.1password.io,go.1password.io,proto.1password.dev";
   } else {
     HELLO_WORLD = "hello world";
