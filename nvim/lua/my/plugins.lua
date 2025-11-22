@@ -38,7 +38,7 @@ require('lazy').setup {
   require 'my.plugins.diffview',
   require 'my.plugins.oil',
   require 'my.plugins.lazydev',
-  require 'my.plugins.opencode',
+  -- require 'my.plugins.opencode',
  -- require 'my.airblade.vim-rooter',
   -- Language-specific plugins
   -- Rust:

@@ -6,7 +6,7 @@
       guiSupport = false;
     };
     ignores = [ ".DS_Store" ".direnv/" ];
-    extraConfig = {
+    settings = {
       user = (if isPersonalMac then {
         name = "Robert Menke";
         email = "robert.b.menke@gmail.com";
