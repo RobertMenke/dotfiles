@@ -69,6 +69,7 @@ in {
     neofetch
     ruby
     rust-analyzer
+    cargo
     # python package manager
     uv
     fzf
@@ -85,6 +86,7 @@ in {
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
+    "/opt/homebrew/bin"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
   ];
