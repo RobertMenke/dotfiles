@@ -114,19 +114,29 @@
       # Expose the package set, including overlays, for convenience.
       # darwinPackages = self.darwinConfigurations."robert-mbp".pkgs;
 
-      # homeConfigurations."robert" = home-manager.lib.homeManagerConfiguration {
-      #   inherit pkgs;
-      #
-      #   # Specify your home configuration modules here, for example,
-      #   # the path to your home.nix.
-      #   modules = [ ./home-manager/home.nix ];
-      #
-      #   # Optionally use extraSpecialArgs
-      #   # to pass through arguments to home.nix
-      #   extraSpecialArgs = {
-      #       isDarwin = true;
-      #       isLinux = false;
-      #   };
-      # };
+      # Linux configuration for Omarchy
+      homeConfigurations."robert@omarchy" = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config = {
+            allowUnfree = true;
+            allowUnfreePredicate = pkg: true;
+          };
+          overlays = overlays;
+        };
+
+        # Specify your home configuration modules here
+        modules = [ ./home-manager/home.nix ];
+
+        # Pass through arguments to home.nix
+        extraSpecialArgs = {
+          inherit inputs;
+          isDarwin = false;
+          isLinux = true;
+          configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+          isPersonalMac = false;
+          isWorkMac = false;
+        };
+      };
     };
 }
