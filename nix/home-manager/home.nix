@@ -1,8 +1,14 @@
-{ inputs, config, pkgs, lib, isPersonalMac, isWorkMac, ... }:
-let 
+{ inputs, config, pkgs, lib, isPersonalMac ? false, isWorkMac ? false, isDarwin ? false, isLinux ? false, ... }:
+let
   # Differentiating between work and personal
-  username = if isPersonalMac then "robert" else if isWorkMac then "robertmenke" else "";
-  homeDirectory = if isPersonalMac then "/Users/robert" else if isWorkMac then "/Users/robertmenke" else "";
+  username = if isPersonalMac then "robert"
+             else if isWorkMac then "robertmenke"
+             else if isLinux then "robert"
+             else "";
+  homeDirectory = if isPersonalMac then "/Users/robert"
+                  else if isWorkMac then "/Users/robertmenke"
+                  else if isLinux then "/home/robert"
+                  else "";
 in {  
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -66,9 +72,10 @@ in {
     yazi
     imagemagick
     tealdeer
-    neofetch
+    fastfetch
     ruby
     rust-analyzer
+    cargo
     # python package manager
     uv
     fzf
@@ -81,12 +88,17 @@ in {
      pkgs.atuin
   ];
 
-  home.sessionPath = [] ++ lib.optionals pkgs.stdenv.isDarwin [
+  home.sessionPath = [
     "$HOME/go/bin"
+    "$HOME/.cargo/bin"
+  ] ++ lib.optionals pkgs.stdenv.isDarwin [
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
+    "/opt/homebrew/bin"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
+  ] ++ lib.optionals isLinux [
+    "$HOME/.local/bin"
   ];
 
   xdg = {
@@ -110,6 +122,13 @@ in {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
         recursive = true;
       };
+      "alacritty.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty.toml";
+      };
+      "starship.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship.toml";
+      };
+    } // lib.optionalAttrs isDarwin {
       yabai = {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/yabai";
         recursive = true;
@@ -121,12 +140,6 @@ in {
       ghostty = {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/ghostty";
         recursive = true;
-      };
-      "alacritty.toml" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty.toml";
-      };
-      "starship.toml" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship.toml";
       };
     };
   };
@@ -143,15 +156,6 @@ in {
         source = "${pkgs.fish}/bin/fish";
         target = "${config.home.homeDirectory}/.local/bin/fish";
       };
-      # VSCode
-      "settings.json" = {
-        source = ./../../vscode/settings.json;
-        target = "${config.home.homeDirectory}/Library/Application Support/Code/User/settings.json";
-      };
-      "keybindings.json" = {
-        source = ./../../vscode/keybindings.json;
-        target = "${config.home.homeDirectory}/Library/Application Support/Code/User/keybindings.json";
-      };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
@@ -162,6 +166,26 @@ in {
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+  } // lib.optionalAttrs isDarwin {
+    # VSCode on macOS
+    "settings.json" = {
+      source = ./../../vscode/settings.json;
+      target = "${config.home.homeDirectory}/Library/Application Support/Code/User/settings.json";
+    };
+    "keybindings.json" = {
+      source = ./../../vscode/keybindings.json;
+      target = "${config.home.homeDirectory}/Library/Application Support/Code/User/keybindings.json";
+    };
+  } // lib.optionalAttrs isLinux {
+    # VSCode on Linux
+    "settings.json" = {
+      source = ./../../vscode/settings.json;
+      target = "${config.home.homeDirectory}/.config/Code/User/settings.json";
+    };
+    "keybindings.json" = {
+      source = ./../../vscode/keybindings.json;
+      target = "${config.home.homeDirectory}/.config/Code/User/keybindings.json";
+    };
   };
 
   # Home Manager can also manage your environment variables through
