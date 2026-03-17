@@ -72,7 +72,7 @@ in {
     yazi
     imagemagick
     tealdeer
-    neofetch
+    fastfetch
     ruby
     rust-analyzer
     cargo
