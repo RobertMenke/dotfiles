@@ -75,6 +75,7 @@ in {
     claude-code
     mirrord
     k9s
+    cursor-cli
     # opencode
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
@@ -89,6 +90,7 @@ in {
     "$HOME/Applications/GoLand.app/Contents/MacOS"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
+    "$HOME/.cargo/bin"
   ];
 
   xdg = {

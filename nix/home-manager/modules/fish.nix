@@ -6,7 +6,7 @@
     GOPATH = "$HOME/go";
     TERM = "xterm-256color";
   } // (if isWorkMac then {
-    GITLAB_TOKEN = "op://Employee/sc3uuibeo6hjh3rwc5sy6qep4u/credential";
+    GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
     GOPRIVATE = "gitlab.1password.io,go.1password.io,proto.1password.dev";
   } else {
     HELLO_WORLD = "hello world";
@@ -40,7 +40,7 @@
         equater-up="tmuxinator start equater";
       } else if isWorkMac then {
         # Add work aliases
-        tail-packaged-oph-logs="tail -f $HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/Library/Application\ Support/1Password/Data/debug/logs/1Password_rCURRENT.log";
+        tail-packaged-oph-logs="tail -f $HOME/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/debug/logs/1Password_rCURRENT.log";
         dbdir="z $HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/Library/Application\ Support/1Password/Data";
         deriveddata="z $HOME/Library/Developer/Xcode/DerivedData";
         dev="tmuxinator start config && tmuxinator start b5 && tmuxinator start core";
