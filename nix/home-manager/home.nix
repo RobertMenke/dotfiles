@@ -66,7 +66,7 @@ in {
     yazi
     imagemagick
     tealdeer
-    neofetch
+    fastfetch
     ruby
     rust-analyzer
     # python package manager
@@ -88,6 +88,7 @@ in {
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
+    "$HOME/.config/nvm"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
     "$HOME/.cargo/bin"

@@ -18,7 +18,7 @@ in {
       neovim
       # python3Full
       #php
-      nodePackages.nodejs
+      # nodePackages.nodejs
       rustup
       go
     ];

@@ -5,9 +5,10 @@
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
     GOPATH = "$HOME/go";
     TERM = "xterm-256color";
+    NVM_DIR = "$HOME/.config/nvm";
   } // (if isWorkMac then {
     GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
-    GOPRIVATE = "gitlab.1password.io,go.1password.io,proto.1password.dev";
+    GOPRIVATE = "go.1password.io,gitlab.1password.io,proto.1infra.dev,github.com/agilebits-inc";
   } else {
     HELLO_WORLD = "hello world";
   });
