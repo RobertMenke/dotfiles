@@ -232,5 +232,9 @@ return { -- LSP Configuration & Plugins
         end,
       },
     }
+
+    -- Servers not managed by mason (installed via nix, etc.) are configured
+    -- in their own modules under `my.lsp.*` and wired up here.
+    require('my.lsp.nixd').setup(capabilities)
   end,
 }

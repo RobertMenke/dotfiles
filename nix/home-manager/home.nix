@@ -66,14 +66,19 @@ in {
     yazi
     imagemagick
     tealdeer
-    neofetch
+    fastfetch
     ruby
     rust-analyzer
     cargo
+    nixd
+    nixfmt-rfc-style
     # python package manager
     uv
     fzf
     claude-code
+    mirrord
+    k9s
+    cursor-cli
     # opencode
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
@@ -86,9 +91,11 @@ in {
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
+    "$HOME/.config/nvm"
     "/opt/homebrew/bin"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
+    "$HOME/.cargo/bin"
   ];
 
   xdg = {
