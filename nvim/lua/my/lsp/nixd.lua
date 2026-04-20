@@ -1,7 +1,12 @@
 -- nixd LSP configuration.
 --
 -- nixd is installed via nix (see nix/home-manager/home.nix), not mason, so
--- we set it up directly with lspconfig. This module is responsible for:
+-- we configure it directly against Neovim's built-in LSP client using
+-- `vim.lsp.config` / `vim.lsp.enable` (the modern replacement for the
+-- deprecated `require('lspconfig').<server>.setup{}` framework). See
+-- `:help lspconfig-nvim-0.11`.
+--
+-- This module is responsible for:
 --   * Deciding which darwinConfigurations entry to feed nixd (based on hostname).
 --   * Pointing nixd at this repo's flake for option/attr completion across
 --     nixpkgs, nix-darwin, and home-manager.
@@ -59,17 +64,21 @@ local function build_settings()
   }
 end
 
---- Register nixd with lspconfig if the binary is available.
+--- Register nixd with Neovim's built-in LSP client if the binary is available.
 --- @param capabilities table The shared LSP client capabilities table.
 function M.setup(capabilities)
   if vim.fn.executable('nixd') ~= 1 then
     return
   end
 
-  require('lspconfig').nixd.setup {
+  vim.lsp.config('nixd', {
+    cmd = { 'nixd' },
+    filetypes = { 'nix' },
+    root_markers = { 'flake.nix', 'default.nix', '.git' },
     capabilities = capabilities,
     settings = build_settings(),
-  }
+  })
+  vim.lsp.enable('nixd')
 end
 
 return M

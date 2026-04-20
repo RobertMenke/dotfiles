@@ -6,6 +6,10 @@
       guiSupport = false;
     };
     ignores = [ ".DS_Store" ".direnv/" ];
+    # Adopt the new home-manager default (25.05+). Signing is configured
+    # manually below via `settings.gpg.*` using ssh, so we don't need
+    # home-manager's signing module to write anything.
+    signing.format = null;
     settings = {
       user = (if isPersonalMac then {
         name = "Robert Menke";

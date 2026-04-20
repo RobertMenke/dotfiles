@@ -71,7 +71,7 @@ in {
     rust-analyzer
     cargo
     nixd
-    nixfmt-rfc-style
+    nixfmt
     # python package manager
     uv
     fzf
