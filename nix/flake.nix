@@ -1,3 +1,84 @@
+# =============================================================================
+#  Robert's nix-darwin + home-manager flake
+# =============================================================================
+#
+#  This flake defines two darwin configurations:
+#
+#      darwinConfigurations."personal"  → user "robert"        (isPersonalMac)
+#      darwinConfigurations."work"      → user "robertmenke"   (isWorkMac)
+#
+#  ---------------------------------------------------------------------------
+#  Day-to-day rebuilds via `nh` (https://github.com/nix-community/nh)
+#  ---------------------------------------------------------------------------
+#
+#  `nh` is a friendlier wrapper around `darwin-rebuild` / `home-manager` /
+#  `nix-collect-garbage`. It's enabled for this user in
+#  `home-manager/home.nix` via `programs.nh`, which:
+#
+#    * installs the `nh` binary,
+#    * sets $NH_FLAKE=~/dotfiles/nix so you can omit the flake path, and
+#    * schedules a weekly `nh clean` run.
+#
+#  Because the darwin configs are named "personal"/"work" (not the machine's
+#  hostname), you have to pass the configuration name with `-H`:
+#
+#      # Personal laptop — build, diff, confirm, activate:
+#      nh darwin switch -H personal
+#
+#      # Work laptop:
+#      nh darwin switch -H work
+#
+#      # From anywhere on disk, since $NH_FLAKE is set. Equivalent to the
+#      # explicit form:
+#      nh darwin switch ~/dotfiles/nix -H personal
+#
+#  Other useful `nh darwin` subcommands:
+#
+#      nh darwin build   -H personal     # build only, no activation
+#      nh darwin test    -H personal     # activate without adding a generation
+#      nh darwin rollback                # roll back to the previous generation
+#      nh darwin --help                  # full reference
+#
+#  Add `--` to forward flags to the underlying nix build, e.g.:
+#
+#      nh darwin switch -H personal -- --show-trace --option eval-cache false
+#
+#  ---------------------------------------------------------------------------
+#  Other `nh` commands worth knowing
+#  ---------------------------------------------------------------------------
+#
+#      nh search <pkg>                   # fast Elasticsearch-backed nixpkgs search
+#      nh clean all                      # GC everything (system + user profiles)
+#      nh clean user --keep 5 --keep-since 7d
+#                                        # GC just this user's profile (same as
+#                                        # the scheduled job in home.nix)
+#      nh clean user --dry               # preview what would be removed
+#
+#  ---------------------------------------------------------------------------
+#  Updating inputs
+#  ---------------------------------------------------------------------------
+#
+#      # Update every flake input (nixpkgs, home-manager, nix-darwin, …):
+#      nix flake update --flake ~/dotfiles/nix
+#
+#      # Update a single input:
+#      nix flake update nixpkgs --flake ~/dotfiles/nix
+#
+#      # Then rebuild to apply:
+#      nh darwin switch -H personal       # or -H work
+#
+#  ---------------------------------------------------------------------------
+#  Fallback without `nh`
+#  ---------------------------------------------------------------------------
+#
+#  If `nh` is ever unavailable (e.g. first-time bootstrap on a fresh machine),
+#  you can fall back to the native tools:
+#
+#      darwin-rebuild switch --flake ~/dotfiles/nix#personal
+#      darwin-rebuild switch --flake ~/dotfiles/nix#work
+#
+# =============================================================================
+
 {
   description = "Robert's home manager config";
 

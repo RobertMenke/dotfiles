@@ -2,8 +2,8 @@ return { -- LSP Configuration & Plugins
   'neovim/nvim-lspconfig',
   dependencies = {
     -- Automatically install LSPs and related tools to stdpath for neovim
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
+    'mason-org/mason.nvim',
+    'mason-org/mason-lspconfig.nvim',
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     { 'folke/neoconf.nvim', cmd = 'Neoconf', config = false, dependencies = { 'nvim-lspconfig' } },
     -- opts = {
@@ -128,113 +128,113 @@ return { -- LSP Configuration & Plugins
       end,
     })
 
-    -- LSP servers and clients are able to communicate to each other what features they support.
-    --  By default, Neovim doesn't support everything that is in the LSP Specification.
-    --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-    --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
+    -- LSP servers and clients negotiate which protocol features they support.
+    -- Neovim's defaults don't cover everything in the LSP spec; nvim-cmp
+    -- (and others) extend what the *client* can do. We build a shared
+    -- capabilities table and broadcast it to every enabled server via
+    -- `vim.lsp.config('*', ...)` below.
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
     capabilities.textDocument.foldingRange = {
       dynamicRegistration = false,
-      lineFoldingOnly = true
+      lineFoldingOnly = true,
     }
 
-    -- Couldn't get swift/sourcekit working :/
-    -- Special config for swift via sourcekit
-    -- See: https://github.com/apple/sourcekit-lsp/blob/main/Editors/README.md
-    -- local lspconfig = require 'lspconfig'
-    -- lspconfig.sourcekit.setup {
-    --   cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' },
-    --   capabilities = vim.tbl_deep_extend('force', {}, capabilities, {}),
-    --   root_dir = lspconfig.util.root_pattern('.git', 'Package.swift', 'compile_commands.json'),
-    -- }
-    -- Enable the following language servers
-    --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+    -- Global defaults applied to every enabled LSP server. Per-server
+    -- `vim.lsp.config(name, ...)` calls are merged on top.
+    vim.lsp.config('*', {
+      capabilities = capabilities,
+    })
+
+    -- Per-server configuration. Keys here must match server names recognized
+    -- by nvim-lspconfig (which now ships configs via `vim.lsp.config` under
+    -- the hood — see `:help lspconfig-all`). Each entry is merged on top of
+    -- whatever nvim-lspconfig ships for that server.
     --
-    --  Add any additional override configuration in the following tables. Available keys are:
-    --  - cmd (table): Override the default command used to start the server
-    --  - filetypes (table): Override the default list of associated filetypes for the server
-    --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-    --  - settings (table): Override the default settings passed when initializing the server.
-    --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+    -- Add new servers as:  servers.<name> = { settings = { ... } }
+    -- For servers without custom settings, just add the name to
+    -- `mason_servers` below.
     local servers = {
-      -- clangd = {},
-      -- gopls = {},
-      -- pyright = {},
-      -- rust_analyzer = {},
-      -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-      --
-      -- Some languages (like typescript) have entire language plugins that can be useful:
-      --    https://github.com/pmizio/typescript-tools.nvim
-      --
-      -- But for many setups, the LSP (`tsserver`) will work just fine
-      -- tsserver = {},
-      --
       lua_ls = {
-        -- cmd = {...},
-        -- filetypes { ...},
-        -- capabilities = {},
         settings = {
           Lua = {
             runtime = { version = 'LuaJIT' },
             workspace = {
               checkThirdParty = false,
-              -- Tells lua_ls where to find all the Lua files that you have loaded
-              -- for your neovim configuration.
+              -- Tell lua_ls where to find all the Lua files loaded for our
+              -- Neovim configuration.
               library = {
                 '${3rd}/luv/library',
                 unpack(vim.api.nvim_get_runtime_file('', true)),
               },
-              -- If lua_ls is really slow on your computer, you can try this instead:
+              -- If lua_ls is really slow, swap the above for:
               -- library = { vim.env.VIMRUNTIME },
             },
             completion = {
               callSnippet = 'Replace',
             },
-            -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+            -- Toggle to ignore lua_ls's noisy `missing-fields` warnings:
             -- diagnostics = { disable = { 'missing-fields' } },
           },
         },
       },
+
+      -- Examples of servers you can uncomment and extend as needed. These
+      -- only take effect once their binary is installed (typically via the
+      -- `mason_servers` list below, which drives mason-tool-installer):
+      -- clangd = {},
+      -- gopls = {},
+      -- pyright = {},
+      -- ts_ls = {},
     }
 
-    -- Ensure the servers and tools above are installed
-    --  To check the current status of installed tools and/or manually install
-    --  other tools, you can run
-    --    :Mason
-    --
-    --  You can press `g?` for help in this menu
+    for name, opts in pairs(servers) do
+      vim.lsp.config(name, opts)
+    end
+
+    -- Mason installs and manages external tools (LSPs, formatters, linters).
+    -- `:Mason` for the UI; `g?` for help inside it.
     require('mason').setup {
       ui = {
         border = 'rounded',
       },
     }
 
-    -- You can add other tools here that you want Mason to install
-    -- for you, so that they are available from within Neovim.
-    local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format lua code
-    })
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    -- Servers we want Mason to install. `mason-lspconfig` (v2+) will then
+    -- automatically call `vim.lsp.enable(<name>)` for each of them on
+    -- startup (see `automatic_enable` below), so no manual `setup{}` call
+    -- is required per server.
+    local mason_servers = vim.tbl_keys(servers)
 
-    require('mason-lspconfig').setup {
-      ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-      automatic_installation = false,
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for tsserver)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
-        end,
-      },
+    require('mason-tool-installer').setup {
+      ensure_installed = vim.list_extend(vim.deepcopy(mason_servers), {
+        'stylua', -- Lua formatter
+      }),
     }
 
-    -- Servers not managed by mason (installed via nix, etc.) are configured
-    -- in their own modules under `my.lsp.*` and wired up here.
-    require('my.lsp.nixd').setup(capabilities)
+    require('mason-lspconfig').setup {
+      -- mason-tool-installer handles installs, so leave this empty.
+      ensure_installed = {},
+      automatic_installation = false,
+      -- v2+: auto-calls `vim.lsp.enable()` for every mason-installed server.
+      -- This replaces the removed v1 `handlers = { ... }` API.
+      automatic_enable = true,
+    }
+
+    -- Servers not managed by mason (installed via nix, rustup, etc.) get
+    -- their own module under `my.lsp.*` and are wired up explicitly here.
+    -- They're responsible for their own `vim.lsp.config` + `vim.lsp.enable`
+    -- calls, but inherit the global `*` capabilities set above.
+    require('my.lsp.nixd').setup()
+
+    -- Couldn't get swift/sourcekit working previously; left here as a
+    -- reference for a future attempt. Uses the native API now:
+    --
+    --   vim.lsp.config('sourcekit', {
+    --     cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' },
+    --     filetypes = { 'swift', 'objc', 'objcpp' },
+    --     root_markers = { 'Package.swift', 'compile_commands.json', '.git' },
+    --   })
+    --   vim.lsp.enable('sourcekit')
   end,
 }

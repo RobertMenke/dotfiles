@@ -11,8 +11,9 @@
 --   * Pointing nixd at this repo's flake for option/attr completion across
 --     nixpkgs, nix-darwin, and home-manager.
 --
--- The caller is expected to pass in the shared `capabilities` table so nixd
--- inherits the same cmp/folding capabilities as the rest of our LSPs.
+-- Shared LSP capabilities (cmp, folding, etc.) are assumed to be set
+-- globally via `vim.lsp.config('*', { capabilities = ... })` in
+-- `my.plugins.lsp-config`; they'll be merged into nixd automatically.
 
 local M = {}
 
@@ -65,8 +66,7 @@ local function build_settings()
 end
 
 --- Register nixd with Neovim's built-in LSP client if the binary is available.
---- @param capabilities table The shared LSP client capabilities table.
-function M.setup(capabilities)
+function M.setup()
   if vim.fn.executable('nixd') ~= 1 then
     return
   end
@@ -75,7 +75,6 @@ function M.setup(capabilities)
     cmd = { 'nixd' },
     filetypes = { 'nix' },
     root_markers = { 'flake.nix', 'default.nix', '.git' },
-    capabilities = capabilities,
     settings = build_settings(),
   })
   vim.lsp.enable('nixd')

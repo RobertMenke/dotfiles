@@ -199,6 +199,23 @@ in {
     # Direnv integration for flakes
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
+
+    # nh - a friendlier CLI wrapper around nix/darwin-rebuild/home-manager.
+    # See the header comment in `nix/flake.nix` for usage examples.
+    #
+    # Setting `flake` here exports NH_FLAKE=<this repo>/nix for the user's
+    # shell, so commands like `nh darwin switch -H personal` can be run from
+    # anywhere without specifying the flake path.
+    nh = {
+      enable = true;
+      flake = "${config.home.homeDirectory}/dotfiles/nix";
+      # Run `nh clean user` weekly, keeping the 5 most recent generations
+      # and anything newer than 7 days. Adjust to taste.
+      clean = {
+        enable = true;
+        extraArgs = "--keep 5 --keep-since 7d";
+      };
+    };
   };
 
   imports = [
