@@ -1,20 +1,20 @@
 [user]
-	name = Robert Menke
-	email = robert.b.menke@gmail.com
-  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI
+    name = Robert Menke
+    email = robert.b.menke@gmail.com
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
 [core]
-	excludesfile = /Users/rbmenke/.gitignore_global
+    excludesfile = /Users/rbmenke/.gitignore_global
     editor = lvim
     ignorecase = false
 [credential]
-	helper = store
+    helper = store
 [rerere]
-	enabled = true
+    enabled = true
 [core]
     pager = delta
 [interactive]
@@ -28,9 +28,10 @@
 [diff]
     colorMoved = default
 [gpg]
-  format = ssh
+    format = ssh
 [gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [commit]
-  gpgsign = true
-
+    gpgsign = true
+[url "ssh://git@github.com"]
+    insteadOf = https://github.com

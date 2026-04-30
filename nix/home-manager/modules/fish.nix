@@ -57,6 +57,7 @@
         # Initialize zoxide for Fish
         zoxide init fish | source
         starship init fish | source
+        source /Users/robertmenke/.config/op/plugins.sh
         eval (direnv hook fish)
       '';
 

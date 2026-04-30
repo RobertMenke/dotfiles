@@ -79,6 +79,7 @@ in {
     mirrord
     k9s
     cursor-cli
+    gh
     # opencode
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
      pkgs.yabai
@@ -91,8 +92,8 @@ in {
     "$HOME/go/bin"
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
-    "$HOME/.config/nvm"
     "/opt/homebrew/bin"
+    "$HOME/.config/nvm/nvm.sh"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
     "$HOME/.cargo/bin"

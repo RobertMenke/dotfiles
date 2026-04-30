@@ -17,4 +17,10 @@
        "${pkgs.rust-analyzer}/bin/rust-analyzer"
     ];
   };
+
+  # The neovim module (26.05+) generates its own init.lua at
+  # ~/.config/nvim/init.lua.  We manage the nvim config directory via
+  # xdg.configFile.nvim (symlinked to ~/dotfiles/nvim), so disable the
+  # generated file to avoid a collision.
+  xdg.configFile."nvim/init.lua".enable = lib.mkForce false;
 }
