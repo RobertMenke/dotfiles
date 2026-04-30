@@ -93,7 +93,6 @@ in {
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
     "/opt/homebrew/bin"
-    "$HOME/.config/nvm/nvm.sh"
   ] ++ lib.optionals isWorkMac [
     "/Users/robertmenke/.dotnet/tools"
     "$HOME/.cargo/bin"

@@ -29,7 +29,16 @@
     fish = {
       enable = true;
 
-      
+      plugins = [
+        # `bass` lets fish source bash scripts (used to load nvm, which is
+        # bash-only and not officially supported by fish — see the note at
+        # https://github.com/nvm-sh/nvm#important-notes)
+        {
+          name = "bass";
+          src = pkgs.fishPlugins.bass.src;
+        }
+      ];
+
       shellAliases = {
         # Add default aliases
         cat="bat";
@@ -59,6 +68,14 @@
         starship init fish | source
         source /Users/robertmenke/.config/op/plugins.sh
         eval (direnv hook fish)
+
+        # Load nvm via bass (nvm is bash-only, see
+        # https://github.com/nvm-sh/nvm#important-notes). Sourcing nvm.sh
+        # activates the default node version (set via `nvm alias default
+        # <version>`) and puts node/npm on PATH for this fish session.
+        if test -s "$NVM_DIR/nvm.sh"
+          bass source "$NVM_DIR/nvm.sh"
+        end
       '';
 
       interactiveShellInit = ''
@@ -85,6 +102,16 @@
             bind \cn 'commandline -f next-complete'
             # Press Ctrl+P to move to the previous completion in the menu
             bind \cp 'commandline -f previous-complete'
+          '';
+        };
+        nvm = {
+          description = "Run nvm (a bash-only tool) from fish via bass";
+          body = ''
+            if not test -s "$NVM_DIR/nvm.sh"
+              echo "nvm: $NVM_DIR/nvm.sh not found. Install nvm: https://github.com/nvm-sh/nvm#installing-and-updating" >&2
+              return 1
+            end
+            bass source "$NVM_DIR/nvm.sh" --no-use ';' nvm $argv
           '';
         };
         y = {
