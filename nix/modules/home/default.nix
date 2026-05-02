@@ -46,7 +46,6 @@
       cachix
       claude-code
       cursor-cli
-      direnv
       fastfetch
       ffmpeg-full
       fzf
@@ -63,13 +62,11 @@
       ripgrep
       ruby
       rustup
-      starship
       tealdeer
       tmux
       tmuxinator
       uv
       yazi
-      zoxide
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [
       yabai
@@ -95,9 +92,21 @@
 
   programs = {
     home-manager.enable = true;
+
     direnv = {
       enable = true;
+      enableFishIntegration = true;
       nix-direnv.enable = true;
+    };
+
+    starship = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableFishIntegration = true;
     };
   };
 

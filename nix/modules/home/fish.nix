@@ -54,11 +54,15 @@ in
           name = "bass";
           src = pkgs.fishPlugins.bass.src;
         }
+        {
+          name = "fzf-fish";
+          src = pkgs.fishPlugins.fzf-fish.src;
+        }
       ];
 
       shellAliases = {
+        # `bat` is enabled in `bat.nix` (Home Manager `programs.bat`).
         cat = "bat";
-        fresh = "clear && source ~/.config/fish/config.fish";
         git-recent-branches = "git for-each-ref --sort=-committerdate --count=10 refs/heads/";
         git-log = "git log --graph --pretty=format:'%Cred%h%Creset - %G? -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
       }
@@ -74,28 +78,27 @@ in
       };
 
       shellInit = ''
-        # zoxide / starship are still initialized manually here. Once we move
-        # them onto the `programs.zoxide` / `programs.starship` HM modules
-        # (Tier 2), these two lines become unnecessary.
-        zoxide init fish | source
-        starship init fish | source
-        eval (direnv hook fish)
+        # zoxide, starship, and direnv are wired via Home Manager
+        # (`programs.zoxide` / `programs.starship` / `programs.direnv` in
+        # `default.nix`).
 
         # Load nvm via bass (nvm is bash-only, see
-        # https://github.com/nvm-sh/nvm#important-notes). Sourcing nvm.sh
-        # activates the default node version (set via `nvm alias default
-        # <version>`) and puts node/npm on PATH for this fish session.
+        # https://github.com/nvm-sh/nvm#important-notes). One `bass` session
+        # avoids paying for two separate bash startups when a default alias
+        # exists.
         if test -s "$NVM_DIR/nvm.sh"
-          bass source "$NVM_DIR/nvm.sh" --no-use
-          # Activate the default version if one is set; otherwise fall back
-          # to whatever's currently linked under $NVM_DIR/versions/node.
           if test -e "$NVM_DIR/alias/default"
-            bass source "$NVM_DIR/nvm.sh" ';' nvm use default --silent >/dev/null 2>&1
+            bass source "$NVM_DIR/nvm.sh" --no-use ';' nvm use default --silent >/dev/null 2>&1
+          else
+            bass source "$NVM_DIR/nvm.sh" --no-use
           end
         end
       '';
 
       interactiveShellInit = ''
+        # Faster escape / `jk` out of insert (default 300ms feels sluggish).
+        set -g fish_escape_delay_ms 50
+
         fish_vi_key_bindings
         bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
@@ -130,7 +133,22 @@ in
         };
         _prompt_move_to_bottom = {
           onEvent = "fish_postexec";
-          body = "tput cup $LINES";
+          body = ''
+            # Skip when there is no TUI-capable tty (piping, CI, dumb TERM) so
+            # `tput` does not fight full-screen programs or non-terminals.
+            test -t 1
+            and test "$TERM" != dumb
+            or return
+            tput cup $LINES
+          '';
+        };
+        fresh = {
+          description = "Clear the screen and re-exec fish (same env refresh as reload)";
+          body = ''
+            clear
+            set -e __HM_SESS_VARS_SOURCED
+            exec fish
+          '';
         };
         nvm = {
           description = "Run nvm (a bash-only tool) from fish via bass";
