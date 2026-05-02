@@ -1,25 +1,23 @@
-{ pkgs, isDarwin, isLinux, isPersonalMac, isWorkMac, ... }:
+{ config, pkgs, ... }:
+let
+  inherit (config.myConfig) user;
+in
 {
   programs.git = {
     enable = true;
-    package = pkgs.git.override {
-      guiSupport = false;
-    };
+    package = pkgs.git.override { guiSupport = false; };
     ignores = [ ".DS_Store" ".direnv/" ];
-    # Adopt the new home-manager default (25.05+). Signing is configured
-    # manually below via `settings.gpg.*` using ssh, so we don't need
-    # home-manager's signing module to write anything.
+
+    # Adopt the new home-manager default (25.05+); signing is configured
+    # manually below via `settings.gpg.*` using ssh.
     signing.format = null;
+
     settings = {
-      user = (if isPersonalMac then {
-        name = "Robert Menke";
-        email = "robert.b.menke@gmail.com";
-        signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOg7V3QuL+N+FyLxi1tCnWHz4tMzFLRSRMyLPHGcxIqI";
-      } else if isWorkMac then {
-        name = "Robert Menke";
-        email = "robert.menke@agilebits.com";
-        signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE18t5Zu74f0MuYAC01F9Fj9bVMlnrYBL/DDvEhJ2jYp";
-      } else {});
+      user = {
+        name = user.fullName;
+        email = user.email;
+        signingKey = user.signingKey;
+      };
       pull = { rebase = false; };
       commit = { gpgsign = true; };
       gpg = {
@@ -47,14 +45,10 @@
         tool = "nvim -d";
         conflictstyle = "diff3";
       };
-      diff = {
-        colorMoved = "default";
-      };
+      diff = { colorMoved = "default"; };
       rerere = { enabled = true; };
       fetch = { prune = true; };
       checkout = { defaultRemote = "origin"; };
-      # faster git server communications
-      # https://git-scm.com/docs/protocol-v2
       protocol = { version = 2; };
       url = {
         "git@gitlab.1password.io:" = {
