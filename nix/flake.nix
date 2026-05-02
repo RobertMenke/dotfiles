@@ -4,33 +4,39 @@
 #
 #  This flake defines two darwin configurations:
 #
-#      darwinConfigurations."personal"  → user "robert"        (isPersonalMac)
-#      darwinConfigurations."work"      → user "robertmenke"   (isWorkMac)
+#      darwinConfigurations."personal"  → user "robert"
+#      darwinConfigurations."work"      → user "robertmenke"
+#
+#  Layout:
+#
+#      flake.nix                # this file: inputs + mkDarwin calls
+#      lib/mkDarwin.nix         # darwin-system builder (de-duped host code)
+#      modules/
+#        darwin/                # host-agnostic nix-darwin config
+#        home/                  # host-agnostic home-manager config
+#          options.nix          # `myConfig.*` options consumed by all modules
+#      hosts/
+#        personal/              # per-host config: myConfig values + users.users
+#        work/
+#      attic/                   # parking lot for unused modules
 #
 #  ---------------------------------------------------------------------------
 #  Day-to-day rebuilds via `nh` (https://github.com/nix-community/nh)
 #  ---------------------------------------------------------------------------
 #
 #  `nh` is a friendlier wrapper around `darwin-rebuild` / `home-manager` /
-#  `nix-collect-garbage`. It's enabled for this user in
-#  `home-manager/home.nix` via `programs.nh`, which:
+#  `nix-collect-garbage`. It's enabled in `modules/home/nh.nix`, which:
 #
 #    * installs the `nh` binary,
-#    * sets $NH_FLAKE=~/dotfiles/nix so you can omit the flake path, and
+#    * sets $NH_FLAKE so you can omit the flake path (only when
+#      `myConfig.dotfiles.liveSourceDir` is set), and
 #    * schedules a weekly `nh clean` run.
 #
 #  Because the darwin configs are named "personal"/"work" (not the machine's
 #  hostname), you have to pass the configuration name with `-H`:
 #
-#      # Personal laptop — build, diff, confirm, activate:
 #      nh darwin switch -H personal
-#
-#      # Work laptop:
 #      nh darwin switch -H work
-#
-#      # From anywhere on disk, since $NH_FLAKE is set. Equivalent to the
-#      # explicit form:
-#      nh darwin switch ~/dotfiles/nix -H personal
 #
 #  Other useful `nh darwin` subcommands:
 #
@@ -50,29 +56,32 @@
 #      nh search <pkg>                   # fast Elasticsearch-backed nixpkgs search
 #      nh clean all                      # GC everything (system + user profiles)
 #      nh clean user --keep 5 --keep-since 7d
-#                                        # GC just this user's profile (same as
-#                                        # the scheduled job in home.nix)
 #      nh clean user --dry               # preview what would be removed
 #
 #  ---------------------------------------------------------------------------
 #  Updating inputs
 #  ---------------------------------------------------------------------------
 #
-#      # Update every flake input (nixpkgs, home-manager, nix-darwin, …):
 #      nix flake update --flake ~/dotfiles/nix
-#
-#      # Update a single input:
 #      nix flake update nixpkgs --flake ~/dotfiles/nix
-#
-#      # Then rebuild to apply:
-#      nh darwin switch -H personal       # or -H work
+#      nh darwin switch -H personal       # apply
 #
 #  ---------------------------------------------------------------------------
-#  Fallback without `nh`
+#  Bootstrapping a fresh machine
 #  ---------------------------------------------------------------------------
 #
-#  If `nh` is ever unavailable (e.g. first-time bootstrap on a fresh machine),
-#  you can fall back to the native tools:
+#  Because dotfile content lives in the nix store by default (see
+#  `modules/home/options.nix → myConfig.dotfiles.liveSourceDir`), a fresh
+#  machine boots end-to-end with no special setup:
+#
+#      git clone <repo> /tmp/dotfiles
+#      nix run nixpkgs#nh -- darwin switch /tmp/dotfiles/nix -H personal
+#      # …then optionally move the repo and enable live-edit:
+#      mv /tmp/dotfiles ~/dotfiles
+#      # edit hosts/personal/default.nix → myConfig.dotfiles.liveSourceDir
+#      nh darwin switch -H personal
+#
+#  Fallback without `nh` (only the very first rebuild needs this):
 #
 #      darwin-rebuild switch --flake ~/dotfiles/nix#personal
 #      darwin-rebuild switch --flake ~/dotfiles/nix#work
@@ -80,11 +89,9 @@
 # =============================================================================
 
 {
-  description = "Robert's home manager config";
+  description = "Robert's nix-darwin + home-manager flake";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
-    # nixpkgs.url = "nixpkgs/release-24.05";
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
@@ -92,122 +99,47 @@
     };
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
-      # inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      # url = "github:nix-community/home-manager/release-24.05";
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  # The inputs@ syntax in the context of Nix flakes refers to function argument destructuring 
-  # with named access to the entire set of arguments - e.g. can use the variable inputs which 
-  # refers to the entire attribute set
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
-    # Just keeping this here as an example even though the let binding isn't in use right now
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      treefmt-nix,
+      ...
+    }:
     let
-      system = "aarch64-darwin";
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfree = true;
-          allowUnfreePredicate = pkg: true;
-          # … any of your other config
-        };
-      };
-      overlays = [
-        inputs.neovim-nightly-overlay.overlays.default
-      ];
-    in {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#robert-mbp
-      darwinConfigurations."personal" = nix-darwin.lib.darwinSystem {
-        # inherit system;
-        system = "aarch64-darwin";
-        modules = [ 
-          ./darwin-configuration.nix         
-          home-manager.darwinModules.home-manager
-          {
-            nixpkgs.overlays = overlays;
-            # `home-manager` config
-            home-manager = {
-              # useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "bak";
-              users.robert = import ./home-manager/home.nix;
-              extraSpecialArgs = {
-                inherit inputs pkgs;
-                isDarwin = true;
-                isLinux = false;
-                configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-                isPersonalMac = true;
-                isWorkMac = false;
-              };
-            };
-          }
-        ];
-        specialArgs = {
-            inherit inputs pkgs;
-            isDarwin = true;
-            isLinux = false;
-            configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-            isPersonalMac = true;
-            isWorkMac = false;
-        };
-      };
+      mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; };
 
-      darwinConfigurations."work" = nix-darwin.lib.darwinSystem {
-        # inherit system;
-        system = "aarch64-darwin";
-        modules = [ 
-          ./darwin-configuration.nix         
-          home-manager.darwinModules.home-manager
-          {
-            nixpkgs.overlays = overlays;
-            # `home-manager` config
-            home-manager = {
-              # useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "bak";
-              users.robertmenke = import ./home-manager/home.nix;
-              extraSpecialArgs = {
-                inherit inputs pkgs;
-                isDarwin = true;
-                isLinux = false;
-                configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-                isPersonalMac = false;
-                isWorkMac = true;
-              };
-            };
-          }
-        ];
-        specialArgs = {
-            inherit inputs;
-            isDarwin = true;
-            isLinux = false;
-            configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-            isPersonalMac = false;
-            isWorkMac = true;
-        };
-      };
+      # treefmt is system-scoped because the wrapper derivation depends on
+      # nixpkgs for the underlying formatter binaries.
+      forEachSystem =
+        f:
+        nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ] (
+          system: f nixpkgs.legacyPackages.${system}
+        );
 
-      # Expose the package set, including overlays, for convenience.
-      # darwinPackages = self.darwinConfigurations."robert-mbp".pkgs;
+      treefmtEval = forEachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+    in
+    {
+      darwinConfigurations.personal = mkDarwin "personal";
+      darwinConfigurations.work = mkDarwin "work";
 
-      # homeConfigurations."robert" = home-manager.lib.homeManagerConfiguration {
-      #   inherit pkgs;
-      #
-      #   # Specify your home configuration modules here, for example,
-      #   # the path to your home.nix.
-      #   modules = [ ./home-manager/home.nix ];
-      #
-      #   # Optionally use extraSpecialArgs
-      #   # to pass through arguments to home.nix
-      #   extraSpecialArgs = {
-      #       isDarwin = true;
-      #       isLinux = false;
-      #   };
-      # };
+      # `nix fmt .` runs the configured formatters across the flake.
+      formatter = forEachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+
+      # `nix flake check` runs this; fails if any nix file isn't nixfmt-clean.
+      checks = forEachSystem (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
     };
 }

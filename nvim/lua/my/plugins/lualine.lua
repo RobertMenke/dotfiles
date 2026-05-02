@@ -1,6 +1,6 @@
 return {
   'nvim-lualine/lualine.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/lsp-status.nvim', 'rebelot/kanagawa.nvim' },
+  dependencies = { 'nvim-tree/nvim-web-devicons', 'rebelot/kanagawa.nvim' },
   config = function()
     local kcolors = require('kanagawa.colors').setup { theme = 'dragon' }
     local theme = kcolors.theme
@@ -53,7 +53,16 @@ return {
           '%=', --[[ add your center compoentnts here in place of this comment ]]
         },
         lualine_x = {},
-        lualine_y = { 'filetype', "require'lsp-status'.status()" },
+        lualine_y = {
+          'filetype',
+          {
+            -- Native LSP progress (Neovim 0.10+) replaces lsp-status.nvim,
+            -- which was unmaintained since 2022.
+            function()
+              return vim.lsp.status()
+            end,
+          },
+        },
         lualine_z = {
           {
             'location',

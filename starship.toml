@@ -10,6 +10,13 @@ $git_status\
 $line_break\
 $character"""
 
+# Fish vi mode: distinguish normal (vicmd) from insert via the last glyph.
+[character]
+vimcmd_symbol = "[❮](bold green)"
+vimcmd_visual_symbol = "[❮](bold yellow)"
+vimcmd_replace_symbol = "[▮](bold purple)"
+vimcmd_replace_one_symbol = "[▮](bold purple)"
+
 [aws]
 symbol = "  "
 
