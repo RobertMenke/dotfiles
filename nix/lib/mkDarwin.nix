@@ -4,6 +4,23 @@ let
 
   system = "aarch64-darwin";
 
+  # ffmpeg-full 8 pulls chromaprint + kvazaar; both routinely break on darwin
+  # under current nixpkgs (chromaprint/ffmpeg link; kvazaar CTest spawns ffmpeg
+  # and gets SIGKILL in the nix sandbox).
+  ffmpegFullDarwinWorkarounds = final: prev: {
+    chromaprint =
+      (prev.chromaprint.override {
+        withTools = false;
+        withExamples = false;
+      }).overrideAttrs
+        (_: {
+          doCheck = false;
+        });
+    kvazaar = prev.kvazaar.overrideAttrs (_: {
+      doCheck = false;
+    });
+  };
+
   pkgs = import nixpkgs {
     inherit system;
     config = {
@@ -12,6 +29,7 @@ let
     };
     overlays = [
       inputs.neovim-nightly-overlay.overlays.default
+      ffmpegFullDarwinWorkarounds
     ];
   };
 

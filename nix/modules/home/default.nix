@@ -5,6 +5,22 @@
   lib,
   ...
 }:
+let
+  # Keep in sync with `lib/mkDarwin.nix`.
+  ffmpegFullDarwinWorkarounds = final: prev: {
+    chromaprint =
+      (prev.chromaprint.override {
+        withTools = false;
+        withExamples = false;
+      }).overrideAttrs
+        (_: {
+          doCheck = false;
+        });
+    kvazaar = prev.kvazaar.overrideAttrs (_: {
+      doCheck = false;
+    });
+  };
+in
 {
   imports = [
     ./bat.nix
@@ -28,6 +44,7 @@
   nixpkgs = {
     overlays = [
       inputs.neovim-nightly-overlay.overlays.default
+      ffmpegFullDarwinWorkarounds
     ];
     config = {
       allowUnfree = true;
