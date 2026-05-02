@@ -44,8 +44,11 @@ return {
 
     require('alpha').setup(dashboard.opts)
 
+    -- `LazyVimStarted` is a LazyVim-distribution event; lazy.nvim itself
+    -- emits `LazyDone` (after install/update) and `VeryLazy` (when the
+    -- startup screen is up). Use VeryLazy so the footer always populates.
     vim.api.nvim_create_autocmd('User', {
-      pattern = 'LazyVimStarted',
+      pattern = 'VeryLazy',
       callback = function()
         local stats = require('lazy').stats()
         local count = (math.floor(stats.startuptime * 100) / 100)

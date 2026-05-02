@@ -74,16 +74,26 @@ vim.opt.filetype = 'on'
 -- Turn line wrapping off
 vim.opt.wrap = false
 
--- Borrow lunarvim's diagnostic settings
+-- Default border for floating windows (hover, signature help, lspconfig
+-- diagnostics float, etc.). Saves having to opt into `border = 'rounded'`
+-- in every plugin spec.
+vim.opt.winborder = 'rounded'
+
+-- Smooth half-line scrolling on <C-d>/<C-u> for long/wrapped lines.
+vim.opt.smoothscroll = true
+
+-- Diagnostic configuration. The previous version of this used LunarVim's
+-- `signs.active` / `signs.values` shape which `vim.diagnostic.config` does
+-- not understand, so the custom gutter icons silently never applied. The
+-- correct (post-0.10) shape uses `signs.text` keyed by severity.
 local icons = require 'my.icons'
-local default_diagnostic_config = {
+vim.diagnostic.config {
   signs = {
-    active = true,
-    values = {
-      { name = 'DiagnosticSignError', text = icons.diagnostics.Error },
-      { name = 'DiagnosticSignWarn', text = icons.diagnostics.Warning },
-      { name = 'DiagnosticSignHint', text = icons.diagnostics.Hint },
-      { name = 'DiagnosticSignInfo', text = icons.diagnostics.Information },
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warning,
+      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+      [vim.diagnostic.severity.INFO] = icons.diagnostics.Information,
     },
   },
   virtual_text = true,
@@ -94,10 +104,8 @@ local default_diagnostic_config = {
     focusable = true,
     style = 'minimal',
     border = 'rounded',
-    source = 'always',
+    source = true,
     header = '',
     prefix = '',
   },
 }
-
-vim.diagnostic.config(default_diagnostic_config)

@@ -34,7 +34,6 @@ require('lazy').setup {
   require 'my.plugins.indent-scope',
   require 'my.plugins.noice',
   require 'my.plugins.fidget',
-  require 'my.plugins.languages.neodev',
   require 'my.plugins.diffview',
   require 'my.plugins.oil',
   require 'my.plugins.lazydev',
