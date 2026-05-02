@@ -104,14 +104,34 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, ... }:
+  outputs = inputs@{ self, nixpkgs, treefmt-nix, ... }:
     let
       mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; };
+
+      # treefmt is system-scoped because the wrapper derivation depends on
+      # nixpkgs for the underlying formatter binaries.
+      forEachSystem = f:
+        nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ]
+          (system: f nixpkgs.legacyPackages.${system});
+
+      treefmtEval = forEachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
     in
     {
       darwinConfigurations.personal = mkDarwin "personal";
       darwinConfigurations.work = mkDarwin "work";
+
+      # `nix fmt .` runs the configured formatters across the flake.
+      formatter = forEachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+
+      # `nix flake check` runs this; fails if any nix file isn't nixfmt-clean.
+      checks = forEachSystem (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
     };
 }
