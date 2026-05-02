@@ -18,7 +18,9 @@ in
         hostname = "ssh.gitlab.1password.io";
       };
       "*" = {
-        extraOptions = { IdentityAgent = ''"${sshAuthSock}"''; };
+        extraOptions = {
+          IdentityAgent = ''"${sshAuthSock}"'';
+        };
       };
     };
   };

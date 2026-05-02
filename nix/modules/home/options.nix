@@ -33,7 +33,10 @@ in
 
     host = {
       role = mkOption {
-        type = types.enum [ "personal" "work" ];
+        type = types.enum [
+          "personal"
+          "work"
+        ];
         description = "High-level identity of this host. Drives a few branches.";
       };
       isDarwin = mkOption {

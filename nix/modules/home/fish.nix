@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   isWork = config.myConfig.host.role == "work";
   isPersonal = config.myConfig.host.role == "personal";
@@ -10,7 +15,8 @@ in
     GOPATH = "$HOME/go";
     TERM = "xterm-256color";
     NVM_DIR = "$HOME/.config/nvm";
-  } // lib.optionalAttrs isWork {
+  }
+  // lib.optionalAttrs isWork {
     GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
     GOPRIVATE = "go.1password.io,gitlab.1password.io,proto.1infra.dev,github.com/agilebits-inc";
   };
@@ -22,9 +28,15 @@ in
       enable = true;
       enableFishIntegration = true;
       settings = {
-        sorting = { dir-grouping = "first"; };
-        icons = { when = "always"; };
-        color = { when = "always"; };
+        sorting = {
+          dir-grouping = "first";
+        };
+        icons = {
+          when = "always";
+        };
+        color = {
+          when = "always";
+        };
       };
     };
 
@@ -36,9 +48,11 @@ in
         fresh = "clear && source ~/.config/fish/config.fish";
         git-recent-branches = "git for-each-ref --sort=-committerdate --count=10 refs/heads/";
         git-log = "git log --graph --pretty=format:'%Cred%h%Creset - %G? -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
-      } // lib.optionalAttrs isPersonal {
+      }
+      // lib.optionalAttrs isPersonal {
         equater-up = "tmuxinator start equater";
-      } // lib.optionalAttrs isWork {
+      }
+      // lib.optionalAttrs isWork {
         tail-packaged-oph-logs = "tail -f $HOME/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/debug/logs/1Password_rCURRENT.log";
         dbdir = "z $HOME/Library/Group\\ Containers/2BUA8C4S2C.com.1password/Library/Application\\ Support/1Password/Data";
         deriveddata = "z $HOME/Library/Developer/Xcode/DerivedData";

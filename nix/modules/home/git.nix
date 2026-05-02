@@ -6,7 +6,10 @@ in
   programs.git = {
     enable = true;
     package = pkgs.git.override { guiSupport = false; };
-    ignores = [ ".DS_Store" ".direnv/" ];
+    ignores = [
+      ".DS_Store"
+      ".direnv/"
+    ];
 
     # Adopt the new home-manager default (25.05+); signing is configured
     # manually below via `settings.gpg.*` using ssh.
@@ -18,8 +21,12 @@ in
         email = user.email;
         signingKey = user.signingKey;
       };
-      pull = { rebase = false; };
-      commit = { gpgsign = true; };
+      pull = {
+        rebase = false;
+      };
+      commit = {
+        gpgsign = true;
+      };
       gpg = {
         format = "ssh";
         ssh = {
@@ -33,8 +40,12 @@ in
         fsmonitor = true;
         untrackedcache = true;
       };
-      interactive = { diffFilter = "${pkgs.delta}/bin/delta --color-only"; };
-      init = { defaultBranch = "master"; };
+      interactive = {
+        diffFilter = "${pkgs.delta}/bin/delta --color-only";
+      };
+      init = {
+        defaultBranch = "master";
+      };
       delta = {
         enable = true;
         line-numbers = true;
@@ -45,11 +56,21 @@ in
         tool = "nvim -d";
         conflictstyle = "diff3";
       };
-      diff = { colorMoved = "default"; };
-      rerere = { enabled = true; };
-      fetch = { prune = true; };
-      checkout = { defaultRemote = "origin"; };
-      protocol = { version = 2; };
+      diff = {
+        colorMoved = "default";
+      };
+      rerere = {
+        enabled = true;
+      };
+      fetch = {
+        prune = true;
+      };
+      checkout = {
+        defaultRemote = "origin";
+      };
+      protocol = {
+        version = 2;
+      };
       url = {
         "git@gitlab.1password.io:" = {
           insteadOf = "https://gitlab.1password.io/";

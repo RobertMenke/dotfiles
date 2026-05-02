@@ -110,15 +110,23 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, treefmt-nix, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      treefmt-nix,
+      ...
+    }:
     let
       mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; };
 
       # treefmt is system-scoped because the wrapper derivation depends on
       # nixpkgs for the underlying formatter binaries.
-      forEachSystem = f:
-        nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ]
-          (system: f nixpkgs.legacyPackages.${system});
+      forEachSystem =
+        f:
+        nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ] (
+          system: f nixpkgs.legacyPackages.${system}
+        );
 
       treefmtEval = forEachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
     in

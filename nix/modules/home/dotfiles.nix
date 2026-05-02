@@ -9,10 +9,9 @@ let
   #     .nix file at eval time), which nix copies into /nix/store at build
   #     time. This is what makes the system bootstrap from any clone
   #     location.
-  pickSource = name: storePath:
-    if live != null
-    then config.lib.file.mkOutOfStoreSymlink "${live}/${name}"
-    else storePath;
+  pickSource =
+    name: storePath:
+    if live != null then config.lib.file.mkOutOfStoreSymlink "${live}/${name}" else storePath;
 in
 {
   # Application configs that live in $XDG_CONFIG_HOME (~/.config).

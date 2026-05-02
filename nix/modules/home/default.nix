@@ -1,4 +1,10 @@
-{ config, inputs, pkgs, lib, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./bat.nix
@@ -32,7 +38,8 @@
   # Packages without first-class home-manager modules. Anything with a
   # `programs.<x>` module should go through that instead, so we get shell
   # integration for free.
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       alacritty
       awscli2
