@@ -17,6 +17,18 @@ in
         port = 2227;
         hostname = "ssh.gitlab.1password.io";
       };
+      "github-enterprise" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/github-enterprise.pub";
+        identitiesOnly = true;
+      };
+      "github.com-personal" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/github-personal.pub";
+        identitiesOnly = true;
+      };
       "*" = {
         extraOptions = {
           IdentityAgent = ''"${sshAuthSock}"'';
