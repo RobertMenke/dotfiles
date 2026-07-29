@@ -22,6 +22,7 @@ in
   // lib.optionalAttrs isWork {
     GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
     GOPRIVATE = "go.1password.io,gitlab.1password.io,proto.1infra.dev,github.com/agilebits-inc";
+    CLOUDSMITH_API_KEY = "op://Employee/Cloudsmith API Key/credential";
   };
 
   programs = {
