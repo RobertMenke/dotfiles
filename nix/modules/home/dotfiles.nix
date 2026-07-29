@@ -28,6 +28,12 @@ in
       source = pickSource "skhd" ../../../skhd;
       recursive = true;
     };
+    # AeroSpace looks here by default; modules/darwin/window-manager.nix drops
+    # the --config-path flag so this file is what the daemon reads.
+    aerospace = {
+      source = pickSource "aerospace" ../../../aerospace;
+      recursive = true;
+    };
     ghostty = {
       source = pickSource "ghostty" ../../../ghostty;
       recursive = true;

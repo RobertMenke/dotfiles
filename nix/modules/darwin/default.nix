@@ -4,18 +4,14 @@
   # (system.primaryUser, users.users.<name>, ids.gids.nixbld) live in
   # hosts/<name>/default.nix.
 
+  # Window manager. Defaults to AeroSpace on every host; override with
+  # `myConfig.windowManager = "yabai"` in a host file.
+  imports = [ ./window-manager.nix ];
+
   environment.systemPackages = with pkgs; [
     rustup
     go
   ];
-
-  services = {
-    yabai = {
-      enable = true;
-      enableScriptingAddition = false;
-    };
-    skhd.enable = true;
-  };
 
   nix.package = pkgs.nix;
   nix.settings.experimental-features = "nix-command flakes";
