@@ -7,6 +7,27 @@
 let
   isWork = config.myConfig.host.role == "work";
   isPersonal = config.myConfig.host.role == "personal";
+
+  # Shell integrations are normally wired as `<tool> init fish | source`,
+  # which forks a process on every shell start. starship is worse: its
+  # `init` output is a bootstrap that forks a *second* starship for
+  # `--print-full-init`. That output only changes when the package does, so
+  # evaluate it once at build time and source a plain file at startup.
+  #
+  # This also pins the integration to the nix package. starship's bootstrap
+  # resolves `starship` off $PATH, and `home.sessionPath` puts
+  # /opt/homebrew/bin ahead of the nix profile, so the prompt was being
+  # rendered by Homebrew's starship (1.18.2) rather than the one configured
+  # here (1.25.1). The build sandbox has no /opt/homebrew, so baking the
+  # init resolves it to the nix binary once and for all.
+  bakeInit =
+    name: cmd:
+    pkgs.runCommand "${name}-fish-init.fish" { } ''
+      ${cmd} > $out
+    '';
+
+  starshipInit = bakeInit "starship" "${lib.getExe pkgs.starship} init fish --print-full-init";
+  zoxideInit = bakeInit "zoxide" "${lib.getExe pkgs.zoxide} init fish";
 in
 {
   home.sessionVariables = {
@@ -47,9 +68,10 @@ in
       enable = true;
 
       plugins = [
-        # `bass` lets fish source bash scripts. We use it to load nvm, which
-        # is bash-only and not officially supported by fish — see the note at
-        # https://github.com/nvm-sh/nvm#important-notes.
+        # `bass` lets fish source bash scripts. The `nvm` function uses it,
+        # since nvm is bash-only and not officially supported by fish — see
+        # the note at https://github.com/nvm-sh/nvm#important-notes. Nothing
+        # calls it during startup any more; see `shellInit`.
         {
           name = "bass";
           src = pkgs.fishPlugins.bass.src;
@@ -78,24 +100,61 @@ in
       };
 
       shellInit = ''
-        # zoxide, starship, and direnv are wired via Home Manager
-        # (`programs.zoxide` / `programs.starship` / `programs.direnv` in
-        # `default.nix`).
+        # direnv hooks itself in via the vendor conf.d file that ships with
+        # the package; starship and zoxide are sourced from
+        # `interactiveShellInit` below. See the note in `default.nix` for why
+        # their Home Manager fish integrations are off.
 
-        # Load nvm via bass (nvm is bash-only, see
-        # https://github.com/nvm-sh/nvm#important-notes). One `bass` session
-        # avoids paying for two separate bash startups when a default alias
-        # exists.
-        if test -s "$NVM_DIR/nvm.sh"
-          if test -e "$NVM_DIR/alias/default"
-            bass source "$NVM_DIR/nvm.sh" --no-use ';' nvm use default --silent >/dev/null 2>&1
+        # Activate the default node without loading nvm.
+        #
+        # We used to do `bass source $NVM_DIR/nvm.sh --no-use ';' nvm use
+        # default`, which cost 0.6-1.5s of *every* shell start: `bass` forks a
+        # python3 to marshal the environment, that python3 forks a bash, and
+        # that bash sources ~4k lines of nvm.sh before `nvm use` walks the
+        # filesystem to resolve the alias.
+        #
+        # The only thing all of that accomplishes at startup is putting one
+        # bin dir on $PATH and exporting NVM_BIN/NVM_INC, so do it directly.
+        # `nvm` itself is still a function (below) that sources the real
+        # nvm.sh through bass, so `nvm install`/`nvm use`/`nvm ls` are
+        # unchanged — they just no longer tax shells that never call them.
+        if test -d "$NVM_DIR/versions/node"
+          set -l nvm_default node
+          test -s "$NVM_DIR/alias/default"
+            and set nvm_default (string trim <"$NVM_DIR/alias/default")
+
+          set -l nvm_version
+          if string match -qr '^v?\d+\.\d+\.\d+$' -- $nvm_default
+            # Pinned exactly, e.g. `v20.17.0`.
+            set nvm_version (string replace -r '^v?' v -- $nvm_default)
           else
-            bass source "$NVM_DIR/nvm.sh" --no-use
+            # `node`, `stable`, `lts/*`, a named alias... all of nvm's
+            # floating aliases resolve to "newest installed" for a local
+            # `nvm use`, so take that rather than reimplementing nvm's alias
+            # rules here. If you pin `default` to a specific version this
+            # branch is skipped entirely.
+            set nvm_version (path basename $NVM_DIR/versions/node/* | sort -V | tail -1)
+          end
+
+          if test -d "$NVM_DIR/versions/node/$nvm_version/bin"
+            set -gx NVM_BIN "$NVM_DIR/versions/node/$nvm_version/bin"
+            set -gx NVM_INC "$NVM_DIR/versions/node/$nvm_version/include/node"
+            # Strip any nvm bin dirs already on $PATH before prepending the
+            # active one, so re-execs (`reload`, `nh switch`, nested shells)
+            # don't stack up stale node versions the way they inherit them.
+            set -gx PATH $NVM_BIN (string match -v -- "$NVM_DIR/versions/node/*" $PATH)
           end
         end
       '';
 
       interactiveShellInit = ''
+        # Prompt and jump-around, from init output baked at build time rather
+        # than regenerated by a subprocess per shell (see `bakeInit` above).
+        if test "$TERM" != dumb
+          source ${starshipInit}
+        end
+        source ${zoxideInit}
+
         # Faster escape / `jk` out of insert (default 300ms feels sluggish).
         set -g fish_escape_delay_ms 50
 

@@ -110,20 +110,35 @@ in
   programs = {
     home-manager.enable = true;
 
+    # The fish integrations for these three are wired by hand in `fish.nix`
+    # instead of by their modules, because each module's version costs a
+    # subprocess (or two) on every shell start:
+    #
+    #   direnv   - the direnv package already ships
+    #              `share/fish/vendor_conf.d/direnv.fish`, which fish
+    #              autoloads, so the module's hook was a second, identical
+    #              one.
+    #   starship - `starship init fish` prints a bootstrap that forks
+    #              *another* starship for `--print-full-init`, and resolves
+    #              it as bare `starship` (i.e. Homebrew's).
+    #   zoxide   - `zoxide init fish` output is static per package version.
+    #
+    # `fish.nix` bakes the init output into the store at build time and
+    # sources the resulting file.
     direnv = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false;
       nix-direnv.enable = true;
     };
 
     starship = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false;
     };
 
     zoxide = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false;
     };
   };
 
