@@ -194,11 +194,42 @@ in
           onEvent = "fish_postexec";
           body = ''
             # Skip when there is no TUI-capable tty (piping, CI, dumb TERM) so
-            # `tput` does not fight full-screen programs or non-terminals.
+            # we do not fight full-screen programs or non-terminals.
             test -t 1
             and test "$TERM" != dumb
             or return
-            tput cup $LINES
+            # CUP clamps to the last row, so 9999 means "the bottom" without
+            # having to know the height. This used to be `tput cup $LINES`,
+            # but $LINES is unreliable at startup: fish samples the terminal
+            # size when it starts and does not refresh it until it handles a
+            # SIGWINCH, while a GUI terminal spawns the shell against a
+            # default-sized pty and applies the real window size a moment
+            # later. Dropping $LINES also drops a `tput` fork per prompt.
+            printf '\e[9999;1H'
+          '';
+        };
+        # The other half of that race: if the terminal resizes *after* the
+        # first prompt is drawn, the prompt is left stranded wherever the
+        # small pty's bottom was. Startup got fast enough (~100ms) that we
+        # now usually beat Ghostty to it, so redo the move when the real size
+        # lands. Only until the first command runs -- after that
+        # `_prompt_move_to_bottom` is already doing the job, and repainting
+        # under the user mid-resize would be obnoxious.
+        _prompt_move_to_bottom_on_resize = {
+          onSignal = "WINCH";
+          description = "Re-bottom the prompt when the terminal reports its real size";
+          body = ''
+            test -z (commandline)
+            or return
+            _prompt_move_to_bottom
+            commandline -f repaint
+          '';
+        };
+        _prompt_move_to_bottom_settled = {
+          onEvent = "fish_preexec";
+          description = "Stop chasing resizes once the shell is in use";
+          body = ''
+            functions -e _prompt_move_to_bottom_on_resize _prompt_move_to_bottom_settled
           '';
         };
         fresh = {
