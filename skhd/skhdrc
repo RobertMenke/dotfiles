@@ -55,9 +55,17 @@ alt + ctrl - 5 : yabai -m window --space 5;
 alt + ctrl - 6 : yabai -m window --space 6;
 alt + ctrl - 7 : yabai -m window --space 7;
 
-# -- Starting/Stopping/Restarting Yabai --
+# -- Recovering Yabai --
 
-# stop/start/restart yabai
-alt + ctrl - q : brew services stop yabai
-alt + ctrl - s : brew services start yabai
-alt + ctrl - r : brew services restart yabai
+# Rebuild this space's window tree from the windows that actually exist.
+# Use this when a window is stuck at half-screen with a dead region next to it
+# -- see the long note at the bottom of yabai/yabairc. `alt + ctrl - b`
+# (--balance) will not fix that case; this will.
+alt + ctrl - 0 : yabai -m space --layout bsp
+
+# Restart yabai. nix-darwin installs the launchd agent as `org.nixos.yabai`, so
+# neither `brew services` (yabai isn't a brew formula here) nor
+# `yabai --restart-service` (which targets `com.asmvik.yabai`) works on this
+# machine. There is no clean stop/start pair to bind: the agent is KeepAlive,
+# so launchd immediately revives anything we kill.
+alt + ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai

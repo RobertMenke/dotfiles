@@ -14,6 +14,10 @@ in
   # Personal mac matches the default upstream value.
   ids.gids.nixbld = 350;
 
+  # Back on yabai + skhd (see modules/darwin/window-manager.nix). Flip to
+  # "aerospace" to switch this machine over again.
+  myConfig.windowManager = "yabai";
+
   home-manager.users.${username} = {
     imports = [ ../../modules/home ];
 

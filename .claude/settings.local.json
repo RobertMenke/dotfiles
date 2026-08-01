@@ -105,7 +105,20 @@
       "Bash(./bench2.sh 'previous build' 12 /private/tmp/claude-501/-Users-robert-dotfiles--claude-worktrees-fish-shell-startup-perf-dae305/b94dc4de-a455-4f71-acfb-efcd7a374a00/scratchpad/newcfg)",
       "Bash(./bench2.sh 'with the prompt fix' 12 /private/tmp/claude-501/-Users-robert-dotfiles--claude-worktrees-fish-shell-startup-perf-dae305/b94dc4de-a455-4f71-acfb-efcd7a374a00/scratchpad/fixcfg)",
       "Bash(XDG_CONFIG_HOME=/private/tmp/claude-501/-Users-robert-dotfiles--claude-worktrees-fish-shell-startup-perf-dae305/b94dc4de-a455-4f71-acfb-efcd7a374a00/scratchpad/fixcfg fish -i /private/tmp/claude-501/-Users-robert-dotfiles--claude-worktrees-fish-shell-startup-perf-dae305/b94dc4de-a455-4f71-acfb-efcd7a374a00/scratchpad/verify.fish)",
-      "Bash(grep -Ev \"^\\\\[.*q$\")"
+      "Bash(grep -Ev \"^\\\\[.*q$\")",
+      "Bash(GIT_CONFIG_GLOBAL=/dev/null git log --oneline -15)",
+      "Bash(GIT_CONFIG_GLOBAL=/dev/null git status --short)",
+      "Bash(scutil --get LocalHostName)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:ghostty.org)",
+      "Bash(curl -sL -o event.h \"https://raw.githubusercontent.com/koekeishiya/yabai/master/src/event.h\")",
+      "Bash(brew list *)",
+      "Bash(brew services *)",
+      "Bash(nh darwin *)",
+      "Bash(sudo -n true)",
+      "Bash(sh -n /Users/robert/dotfiles/yabai/yabairc)",
+      "Bash(GIT_CONFIG_NOSYSTEM=1 HOME=/tmp git diff -- yabai skhd nix)"
     ]
   }
 }
