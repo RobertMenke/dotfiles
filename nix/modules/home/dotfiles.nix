@@ -30,10 +30,16 @@ in
     };
     # AeroSpace looks here by default; modules/darwin/window-manager.nix drops
     # the --config-path flag so this file is what the daemon reads.
-    aerospace = {
-      source = pickSource "aerospace" ../../../aerospace;
-      recursive = true;
-    };
+    #
+    # Deliberately NOT recursive, unlike its neighbours. `recursive` makes
+    # home-manager enumerate the source directory at *build* time, which only
+    # works here because `sandbox = false` lets the builder read the live
+    # checkout. The resulting file list is frozen into the store, but the
+    # derivation hash doesn't depend on it, so nix can never invalidate it.
+    # That turned a stray `aerospace.toml.bak` into a permanent phantom entry
+    # that reappeared on every switch. AeroSpace only ever reads this
+    # directory, so one whole-directory symlink is both sufficient and immune.
+    aerospace.source = pickSource "aerospace" ../../../aerospace;
     ghostty = {
       source = pickSource "ghostty" ../../../ghostty;
       recursive = true;

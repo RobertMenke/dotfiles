@@ -118,7 +118,9 @@
       "Bash(nh darwin *)",
       "Bash(sudo -n true)",
       "Bash(sh -n /Users/robert/dotfiles/yabai/yabairc)",
-      "Bash(GIT_CONFIG_NOSYSTEM=1 HOME=/tmp git diff -- yabai skhd nix)"
+      "Bash(GIT_CONFIG_NOSYSTEM=1 HOME=/tmp git diff -- yabai skhd nix)",
+      "Bash(yabai --version)",
+      "Read(//Users/robert/.config/yabai/**)"
     ]
   }
 }

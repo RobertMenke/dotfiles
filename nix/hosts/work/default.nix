@@ -14,6 +14,10 @@ in
   # Hack to avoid having to uninstall the existing nix install on the work mac.
   ids.gids.nixbld = 30000;
 
+  # Matches the personal mac (see modules/darwin/window-manager.nix). Flip to
+  # "aerospace" to switch this machine over again.
+  myConfig.windowManager = "yabai";
+
   home-manager.users.${username} = {
     imports = [ ../../modules/home ];
 

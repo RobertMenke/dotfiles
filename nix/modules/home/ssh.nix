@@ -6,33 +6,36 @@ in
   programs.ssh = {
     enableDefaultConfig = false;
     enable = true;
-    matchBlocks = {
+    # Attribute names are Host patterns; keys are upstream OpenSSH directive
+    # names. home-manager emits the `*` block last regardless of where it
+    # appears here, so first-match-wins ordering still works out.
+    settings = {
       "gitlab.1password.io" = {
-        forwardAgent = true;
-        port = 2227;
-        hostname = "ssh.gitlab.1password.io";
+        ForwardAgent = true;
+        Port = 2227;
+        HostName = "ssh.gitlab.1password.io";
       };
       "*.gitlab.1password.io" = {
-        forwardAgent = true;
-        port = 2227;
-        hostname = "ssh.gitlab.1password.io";
+        ForwardAgent = true;
+        Port = 2227;
+        HostName = "ssh.gitlab.1password.io";
       };
       "github-enterprise" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/github-enterprise.pub";
-        identitiesOnly = true;
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/github-enterprise.pub";
+        IdentitiesOnly = true;
       };
       "github.com-personal" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/github-personal.pub";
-        identitiesOnly = true;
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/github-personal.pub";
+        IdentitiesOnly = true;
       };
       "*" = {
-        extraOptions = {
-          IdentityAgent = ''"${sshAuthSock}"'';
-        };
+        # The embedded quotes are load-bearing: the socket path contains a
+        # space ("Group Containers").
+        IdentityAgent = ''"${sshAuthSock}"'';
       };
     };
   };

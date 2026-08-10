@@ -19,6 +19,10 @@ let
     kvazaar = prev.kvazaar.overrideAttrs (_: {
       doCheck = false;
     });
+    # frei0r 3.2.1 grew a hard dep on gavl, which needs Linux-only libdrm and
+    # fails eval on darwin. Fixed upstream (nixpkgs 54f5c94aae, 2026-08-06);
+    # drop the override once nixpkgs-unstable advances past it.
+    ffmpeg-full = prev.ffmpeg-full.override { withFrei0r = false; };
   };
 
   pkgs = import nixpkgs {

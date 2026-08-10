@@ -1,2 +1,6 @@
 .DS_Store
 .idea
+
+# home-manager writes these when it finds a real file where it wants to place
+# a symlink (home-manager.backupFileExtension = "bak"). They are never source.
+*.bak
