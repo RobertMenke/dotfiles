@@ -17,7 +17,8 @@ require('lazy').setup {
   require 'my.plugins.autoformat',
   require 'my.colorschemes.kanagawa',
   require 'my.plugins.todo-comments',
-  require 'my.plugins.mini', -- also provides icons, indentscope, start screen
+  require 'my.plugins.mini', -- also provides icons and indentscope
+  require 'my.plugins.snacks', -- dashboard
   require 'my.plugins.treesitter',
   require 'my.plugins.neotree',
   require 'my.plugins.window-picker',
