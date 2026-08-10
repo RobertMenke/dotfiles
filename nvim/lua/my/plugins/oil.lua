@@ -1,7 +1,7 @@
 return {
   {
     "stevearc/oil.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "echasnovski/mini.nvim" }, -- icons via mini.icons' devicons mock
     config = function()
       CustomOilBar = function()
         local path = vim.fn.expand "%"

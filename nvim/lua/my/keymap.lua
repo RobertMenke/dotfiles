@@ -51,8 +51,8 @@ vim.keymap.set('n', '<C-s>', '<C-w><C-s>', { desc = 'Split the window horizontal
 -- Neotree
 vim.keymap.set('n', '<C-t>', '<cmd>Neotree toggle<cr>', { desc = 'Toggle Neotree' })
 
--- Comment
-vim.keymap.set('x', 'gc', '<Plug>(comment_toggle_linewise_visual)')
+-- Commenting: the built-in `gc`/`gcc` operators (Neovim 0.10+) replaced
+-- Comment.nvim, so no mapping is needed here.
 
 -- Navigate through quick fix lists more easily
 vim.keymap.set('n', '<C-n>', ':cn<CR>', { desc = 'Go to the next item in the quickfix list' })

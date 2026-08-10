@@ -112,7 +112,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
           '--ignore-file',
         },
         dynamic_preview_title = true,
-        path_display = { "filename_first" },
+        path_display = { 'filename_first' },
         mappings = {
           i = {
             ['<C-q>'] = smart_send_to_qflist,
@@ -136,11 +136,15 @@ return { -- Fuzzy Finder (files, lsp, etc)
                 return {
                   prompt = parsed.prompt,
                   updated_finder = require('telescope.finders').new_job(function(new_prompt)
-                    return vim.tbl_flatten {
-                      require('telescope.config').values.vimgrep_arguments,
-                      '--',
-                      new_prompt,
-                    }
+                    -- vim.tbl_flatten was deprecated in 0.10 and removed in 0.13
+                    return vim
+                      .iter({
+                        require('telescope.config').values.vimgrep_arguments,
+                        '--',
+                        new_prompt,
+                      })
+                      :flatten()
+                      :totable()
                   end, require('telescope.make_entry').gen_from_vimgrep {}, nil, nil),
                 }
               end
@@ -159,13 +163,16 @@ return { -- Fuzzy Finder (files, lsp, etc)
               return {
                 prompt = parsed.prompt,
                 updated_finder = require('telescope.finders').new_job(function(new_prompt)
-                  return vim.tbl_flatten {
-                    require('telescope.config').values.vimgrep_arguments,
-                    '-g',
-                    pattern,
-                    '--',
-                    new_prompt,
-                  }
+                  return vim
+                    .iter({
+                      require('telescope.config').values.vimgrep_arguments,
+                      '-g',
+                      pattern,
+                      '--',
+                      new_prompt,
+                    })
+                    :flatten()
+                    :totable()
                 end, require('telescope.make_entry').gen_from_vimgrep {}, nil, nil),
               }
             end,
