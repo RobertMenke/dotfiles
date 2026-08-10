@@ -1,6 +1,7 @@
 return {
   'nvim-lualine/lualine.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons', 'rebelot/kanagawa.nvim' },
+  -- mini.nvim provides the icons (mini.icons mocks nvim-web-devicons)
+  dependencies = { 'echasnovski/mini.nvim', 'rebelot/kanagawa.nvim' },
   config = function()
     local kcolors = require('kanagawa.colors').setup { theme = 'dragon' }
     local theme = kcolors.theme

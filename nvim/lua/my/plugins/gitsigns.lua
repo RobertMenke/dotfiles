@@ -36,7 +36,9 @@ return { -- Adds git related signs to the gutter, as well as utilities for manag
         gs.blame_line { full = true }
       end, 'Blame Line - View Commit')
 
-      map('n', '<leader>gd', gs.diffthis, 'Diff This')
+      -- <leader>gD: buffer diff. (<leader>gd stays DiffviewOpen — the old
+      -- buffer-local <leader>gd here silently shadowed it in git buffers.)
+      map('n', '<leader>gD', gs.diffthis, 'Diff This Buffer')
     end,
   },
 }

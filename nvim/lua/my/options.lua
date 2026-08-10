@@ -68,9 +68,6 @@ vim.opt.cmdheight = 0
 -- Global status line
 vim.opt.laststatus = 3
 
--- Turn on the filetype plugin
-vim.opt.filetype = 'on'
-
 -- Turn line wrapping off
 vim.opt.wrap = false
 

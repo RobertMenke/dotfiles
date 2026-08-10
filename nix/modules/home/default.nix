@@ -82,6 +82,7 @@ in
       tealdeer
       tmux
       tmuxinator
+      tree-sitter # parser compiler for nvim-treesitter (main branch)
       uv
       yazi
     ]
