@@ -2,17 +2,28 @@
 -- best-maintained start screen; replaced mini.starter). Other snacks
 -- modules stay disabled — but note snacks.picker is a plausible future
 -- telescope replacement once plenary is archived.
-local logo = table.concat({
+
+-- Snacks centers each header line *individually*, so pad every line to a
+-- common display width to keep the block's internal alignment intact.
+local logo_lines = {
   '                                                    Remember that you  ',
-  '                                                       will die      ',
-  '       ████ ██████           █████      ██                     ',
-  '      ███████████             █████                             ',
-  '      █████████ ███████████████████ ███   ███████████   ',
-  '     █████████  ███    █████████████ █████ ██████████████   ',
-  '    █████████ ██████████ █████████ █████ █████ ████ █████   ',
-  '  ███████████ ███    ███ █████████ █████ █████ ████ █████  ',
-  ' ██████  █████████████████████ ████ █████ █████ ████ ██████ ',
-}, '\n')
+  '                                                       will die      ',
+  '       ████ ██████           █████      ██                     ',
+  '      ███████████             █████                             ',
+  '      █████████ ███████████████████ ███   ███████████   ',
+  '     █████████  ███    █████████████ █████ ██████████████   ',
+  '    █████████ ██████████ █████████ █████ █████ ████ █████   ',
+  '  ███████████ ███    ███ █████████ █████ █████ ████ █████  ',
+  ' ██████  █████████████████████ ████ █████ █████ ████ ██████ ',
+}
+local width = 0
+for _, line in ipairs(logo_lines) do
+  width = math.max(width, vim.fn.strdisplaywidth(line))
+end
+for i, line in ipairs(logo_lines) do
+  logo_lines[i] = line .. string.rep(' ', width - vim.fn.strdisplaywidth(line))
+end
+local logo = table.concat(logo_lines, '\n')
 
 return {
   'folke/snacks.nvim',
@@ -26,14 +37,14 @@ return {
         header = logo,
         -- stylua: ignore
         keys = {
-          { icon = ' ', key = 'e', desc = 'New File', action = ':ene | startinsert' },
-          { icon = ' ', key = 'f', desc = 'Find File', action = ':Telescope find_files' },
+          { icon = ' ', key = 'e', desc = 'New File', action = ':ene | startinsert' },
+          { icon = ' ', key = 'f', desc = 'Find File', action = ':Telescope find_files' },
           { icon = '󰱼 ', key = 'g', desc = 'Find Word', action = ':Telescope live_grep' },
-          { icon = ' ', key = 'r', desc = 'Recent Files', action = ':Telescope oldfiles' },
-          { icon = ' ', key = 'c', desc = 'Config', action = ':e $MYVIMRC' },
+          { icon = ' ', key = 'r', desc = 'Recent Files', action = ':Telescope oldfiles' },
+          { icon = ' ', key = 'c', desc = 'Config', action = ':e $MYVIMRC' },
           { icon = '󱌣 ', key = 'm', desc = 'Mason', action = ':Mason' },
           { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = ':Lazy' },
-          { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
+          { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
         },
       },
       sections = {
