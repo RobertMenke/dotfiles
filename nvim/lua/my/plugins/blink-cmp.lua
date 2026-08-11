@@ -29,6 +29,14 @@ return {
       ['<CR>'] = { 'accept', 'fallback' },
     },
     completion = {
+      menu = {
+        -- blink links its menu to `Pmenu`, and kanagawa gives Pmenu a blue
+        -- (`ui.bg_visual`, #223249) that clashes with everything else here.
+        -- nvim-cmp's `window.bordered()` used to render on NormalFloat, so
+        -- point blink at the same float colors the docs/signature windows
+        -- (and the rest of our floats) already use.
+        winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
+      },
       documentation = { auto_show = true, auto_show_delay_ms = 250 },
     },
     appearance = {
