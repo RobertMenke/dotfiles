@@ -22,6 +22,7 @@ require('lazy').setup {
   require 'my.plugins.treesitter',
   require 'my.plugins.neotree',
   require 'my.plugins.window-picker',
+  require 'my.plugins.tmux-navigator',
   require 'my.plugins.transparent',
   require 'my.plugins.autosave',
   require 'my.plugins.bqf',
