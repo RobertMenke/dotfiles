@@ -3,18 +3,16 @@
 -- modules stay disabled — but note snacks.picker is a plausible future
 -- telescope replacement once plenary is archived.
 
--- Snacks centers each header line *individually*, so pad every line to a
--- common display width to keep the block's internal alignment intact.
+-- ANSI-Shadow figlet "NEOVIM". All lines are equal display width, and the
+-- padding loop below keeps them that way: snacks centers each header line
+-- *individually*, so unequal widths would shear the block.
 local logo_lines = {
-  '                                                    Remember that you  ',
-  '                                                       will die      ',
-  '       ████ ██████           █████      ██                     ',
-  '      ███████████             █████                             ',
-  '      █████████ ███████████████████ ███   ███████████   ',
-  '     █████████  ███    █████████████ █████ ██████████████   ',
-  '    █████████ ██████████ █████████ █████ █████ ████ █████   ',
-  '  ███████████ ███    ███ █████████ █████ █████ ████ █████  ',
-  ' ██████  █████████████████████ ████ █████ █████ ████ ██████ ',
+  '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
+  '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
+  '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
+  '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
+  '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
+  '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
 }
 local width = 0
 for _, line in ipairs(logo_lines) do
@@ -49,10 +47,36 @@ return {
       },
       sections = {
         { section = 'header' },
+        {
+          text = { { 'Remember that you will die', hl = 'SnacksDashboardMemento' } },
+          align = 'center',
+          padding = 1,
+        },
         { section = 'keys', gap = 1, padding = 1 },
         -- '<n> plugins loaded in <x>ms' footer, like the old dashboards
         { section = 'startup' },
       },
     },
   },
+  config = function(_, opts)
+    require('snacks').setup(opts)
+
+    -- Tie the dashboard to the kanagawa dragon palette (same source as the
+    -- lualine theme). Re-applied on ColorScheme so :colorscheme reloads
+    -- don't wipe it.
+    local function dashboard_highlights()
+      local ok, kanagawa = pcall(require, 'kanagawa.colors')
+      if not ok then
+        return
+      end
+      local theme = kanagawa.setup({ theme = 'dragon' }).theme
+      vim.api.nvim_set_hl(0, 'SnacksDashboardHeader', { fg = theme.syn.fun })
+      vim.api.nvim_set_hl(0, 'SnacksDashboardMemento', { fg = theme.syn.comment, italic = true })
+    end
+    dashboard_highlights()
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = vim.api.nvim_create_augroup('my-dashboard-hl', { clear = true }),
+      callback = dashboard_highlights,
+    })
+  end,
 }
