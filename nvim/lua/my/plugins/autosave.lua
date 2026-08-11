@@ -1,14 +1,11 @@
+-- okuuva/auto-save.nvim is the maintained fork of Pocco81/auto-save.nvim
+-- (original abandoned ~2023). Drop-in replacement; the old custom
+-- `condition` callback was a no-op ('&lua' is not a real option) so plain
+-- defaults lose nothing.
 return {
-  'Pocco81/auto-save.nvim',
-  config = function()
-    require('auto-save').setup {
-      condition = function(buf)
-        local utils = require 'auto-save.utils.data'
-
-        if utils.not_in(vim.fn.getbufvar(buf, '&lua'), {}) then
-          return true
-        end
-      end,
-    }
-  end,
+  'okuuva/auto-save.nvim',
+  version = '^1',
+  cmd = 'ASToggle',
+  event = { 'InsertLeave', 'TextChanged' },
+  opts = {},
 }

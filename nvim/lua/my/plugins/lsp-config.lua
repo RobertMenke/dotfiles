@@ -1,6 +1,8 @@
 return { -- LSP Configuration & Plugins
   'neovim/nvim-lspconfig',
   dependencies = {
+    -- Completion capabilities come from blink.cmp (see my.plugins.blink-cmp)
+    'saghen/blink.cmp',
     -- Automatically install LSPs and related tools to stdpath for neovim
     'mason-org/mason.nvim',
     'mason-org/mason-lspconfig.nvim',
@@ -100,9 +102,10 @@ return { -- LSP Configuration & Plugins
         --  Most Language Servers support renaming across files, etc.
         map('<leader>cr', vim.lsp.buf.rename, '[R]ename')
 
-        -- Opens a popup that displays documentation about the word under your cursor
-        --  See `:help K` for why this keymap
-        map('K', vim.lsp.buf.hover, 'Hover Documentation')
+        -- NOTE: `K` (hover) needs no mapping — it's a built-in LSP default
+        -- since 0.10, as are grn (rename), gra (code action), grr
+        -- (references) and gri (implementation). The maps above are kept
+        -- for their telescope-flavored pickers and muscle memory.
 
         -- WARN: This is not Goto Definition, this is Goto Declaration.
         --  For example, in C this would take you to the header
@@ -114,7 +117,7 @@ return { -- LSP Configuration & Plugins
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.server_capabilities.documentHighlightProvider then
+        if client and client:supports_method 'textDocument/documentHighlight' then
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
             callback = vim.lsp.buf.document_highlight,
@@ -129,12 +132,11 @@ return { -- LSP Configuration & Plugins
     })
 
     -- LSP servers and clients negotiate which protocol features they support.
-    -- Neovim's defaults don't cover everything in the LSP spec; nvim-cmp
-    -- (and others) extend what the *client* can do. We build a shared
-    -- capabilities table and broadcast it to every enabled server via
-    -- `vim.lsp.config('*', ...)` below.
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+    -- Neovim's defaults don't cover everything in the LSP spec; blink.cmp
+    -- extends what the *client* can do. We build a shared capabilities
+    -- table (blink merges in Neovim's defaults) and broadcast it to every
+    -- enabled server via `vim.lsp.config('*', ...)` below.
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
     capabilities.textDocument.foldingRange = {
       dynamicRegistration = false,
       lineFoldingOnly = true,
@@ -179,13 +181,16 @@ return { -- LSP Configuration & Plugins
         },
       },
 
+      -- TypeScript via vtsls (the community-recommended replacement for the
+      -- unmaintained typescript-tools.nvim; also LazyVim's default).
+      vtsls = {},
+
       -- Examples of servers you can uncomment and extend as needed. These
       -- only take effect once their binary is installed (typically via the
       -- `mason_servers` list below, which drives mason-tool-installer):
       -- clangd = {},
       -- gopls = {},
       -- pyright = {},
-      -- ts_ls = {},
     }
 
     for name, opts in pairs(servers) do

@@ -1,7 +1,7 @@
 -- IMPORTANT: rust-analyzer must be installed via `rustup component add rust-analyzer` for this plugin to work
 return {
   'mrcjkb/rustaceanvim',
-  version = '^4', -- Recommended
+  version = '^9', -- v9.x requires Neovim 0.12+ (pin ^8 if ever back on 0.11)
   ft = { 'rust' },
   opts = {
     server = {

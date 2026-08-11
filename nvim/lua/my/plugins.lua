@@ -10,15 +10,15 @@
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  require 'my.plugins.cmp',
-  require 'my.plugins.comment',
+  require 'my.plugins.blink-cmp',
   require 'my.plugins.which-key',
   require 'my.plugins.telescope',
   require 'my.plugins.lsp-config',
   require 'my.plugins.autoformat',
   require 'my.colorschemes.kanagawa',
   require 'my.plugins.todo-comments',
-  require 'my.plugins.mini',
+  require 'my.plugins.mini', -- also provides icons and indentscope
+  require 'my.plugins.snacks', -- dashboard
   require 'my.plugins.treesitter',
   require 'my.plugins.neotree',
   require 'my.plugins.window-picker',
@@ -26,24 +26,17 @@ require('lazy').setup {
   require 'my.plugins.autosave',
   require 'my.plugins.bqf',
   require 'my.plugins.treesitter-context',
-  -- require 'my.plugins.copilot',
-  require 'my.plugins.dashboard',
   require 'my.plugins.lualine',
   require 'my.plugins.neogit',
   require 'my.plugins.gitsigns',
-  require 'my.plugins.indent-scope',
   require 'my.plugins.noice',
   require 'my.plugins.fidget',
   require 'my.plugins.diffview',
   require 'my.plugins.oil',
   require 'my.plugins.lazydev',
-  -- require 'my.plugins.opencode',
- -- require 'my.airblade.vim-rooter',
   -- Language-specific plugins
   -- Rust:
   require 'my.plugins.languages.crates',
-  -- require 'my.plugins.languages.rust-tools',
   require 'my.plugins.languages.rustacean-nvim',
-  -- Typescript:
-  require 'my.plugins.languages.typescript',
+  -- Typescript is served by vtsls via mason (see my.plugins.lsp-config)
 }
