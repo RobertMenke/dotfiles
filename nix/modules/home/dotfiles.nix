@@ -18,7 +18,13 @@ in
   xdg.configFile = {
     nvim = {
       source = pickSource "nvim" ../../../nvim;
-      recursive = true;
+      # `recursive` only for the bootstrap (store-copy) case. In live mode a
+      # single whole-directory symlink avoids the frozen-file-list trap
+      # described for aerospace below: with `recursive = true` the build-time
+      # enumeration of the live checkout is baked into the store without
+      # affecting the derivation hash, so files added later (e.g. a new
+      # plugin spec) never appear in ~/.config/nvim on switch.
+      recursive = live == null;
     };
     yabai = {
       source = pickSource "yabai" ../../../yabai;
