@@ -120,7 +120,9 @@
       "Bash(sh -n /Users/robert/dotfiles/yabai/yabairc)",
       "Bash(GIT_CONFIG_NOSYSTEM=1 HOME=/tmp git diff -- yabai skhd nix)",
       "Bash(yabai --version)",
-      "Read(//Users/robert/.config/yabai/**)"
+      "Read(//Users/robert/.config/yabai/**)",
+      "Bash(yabai -m query --displays)",
+      "Bash(yabai -m query --spaces)"
     ]
   }
 }

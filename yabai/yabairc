@@ -24,8 +24,6 @@ yabai -m config mouse_action1 move
 yabai -m config mouse_action2 resize
 
 # when window is dropped in center of another window, swap them (on edges it will split it)
-# NOTE: this needs the `config` domain -- without it yabai parses `mouse_drop_action`
-# as a domain and the line fails with "unknown domain".
 yabai -m config mouse_drop_action swap
 
 
@@ -44,41 +42,9 @@ yabai -m signal --add event=application_terminated action="yabai -m query --wind
 yabai -m config auto_balance on
 yabai -m config window_topmost off
 
-# ---------------------------------------------------------------------------
-# Recovering from a stale window tree
-# ---------------------------------------------------------------------------
-#
-# Symptom: one visible window is pinned to half the screen and the other half
-# is dead. Opening another window splits the *occupied* half; the dead half
-# stays empty.
-#
-# Cause: yabai maintains each space's layout as a bsp tree and updates it from
-# macOS accessibility notifications. That notification stream is lossy. When a
-# window_destroyed notification never arrives, the leaf node stays in the tree
-# holding a window id that no longer exists. yabai keeps reserving that node's
-# region and pushes frames at a dead window, so the region renders as empty.
-# This is upstream behaviour, not a misconfiguration -- there is no yabai
-# config option that prevents it.
-#
-# `space --balance` (skhd: alt + ctrl - b) does NOT fix this. Balancing only
-# equalises split ratios on the existing tree; with auto_balance already on the
-# tree is balanced -- it just has one leaf too many.
-#
-# `yabai -m space --layout bsp` DOES fix it, even when the space is already
-# bsp: space_manager_set_layout_for_space() unconditionally runs view_clear()
-# and then window_manager_validate_and_check_for_windows_on_space(), which
-# throws the tree away and rebuilds it from the windows that actually exist on
-# the space. skhd binds this to `alt + ctrl - 0` for on-demand recovery.
-#
-# The signals below run that same rebuild at moments where a stale tree is
-# likely and a rebuild costs nothing (auto_balance already discards manual
-# split ratios on every tree change, so there is no resize state to lose).
-#
-# Hooking window_destroyed would be pointless: the missing window_destroyed
-# notification *is* the bug, so the signal would never fire in the broken case.
-#
-# Caveat: these force the space back to bsp. Remove them if you ever want to
-# leave a space set to `stack`.
+# Rebuild the tree on events that can leave it stale. Rebuilding also drops any
+# node still holding a dead window id, which `space --balance` does not.
+# Does NOT recover a window yabai never registered -- only a restart does.
 yabai -m signal --add event=space_changed action='yabai -m space $YABAI_SPACE_INDEX --layout bsp'
 yabai -m signal --add event=mission_control_exit action='yabai -m space --layout bsp'
 yabai -m signal --add event=system_woke action='yabai -m space --layout bsp'
