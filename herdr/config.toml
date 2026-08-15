@@ -1,0 +1,191 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# herdr — agent multiplexer
+#
+# Keybindings mirror tmux.conf in this repo wherever herdr has an equivalent
+# action, so one set of muscle memory drives both. herdr's own defaults are
+# already tmux-shaped (prefix ctrl+b, prefix+c/x/z/n/p/1-9/[), so most of what
+# follows is either a tmux binding herdr lacks by default, or a deliberate
+# resolution of a case where the two disagree.
+#
+# Vocabulary differs even where behaviour matches:
+#
+#   tmux session  ->  herdr workspace
+#   tmux window   ->  herdr tab
+#   tmux pane     ->  herdr pane
+#
+# Print the annotated upstream defaults with `herdr --default-config`; the live
+# bindings are in the in-app help at prefix+?.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[terminal]
+# tmux.conf pins fish with `set -g default-shell $HOME/.local/bin/fish`, using a
+# symlink so no username or store path is hard-coded. herdr does NOT expand `~`
+# in this value -- it fails at workspace-create time with "login shell ... is not
+# executable", and emits no warning at config load -- so the ~/.local/bin trick
+# is unavailable here. /run/current-system/sw/bin is the next best thing: it is
+# username-free, store-hash-free, and guaranteed on both hosts by
+# `programs.fish.enable = true` in nix/modules/darwin/default.nix.
+default_shell = "/run/current-system/sw/bin/fish"
+
+# "auto" means login shells on macOS, which is what tmux does for new windows.
+shell_mode = "auto"
+
+# Every split and new window in tmux.conf passes -c "#{pane_current_path}";
+# "follow" is the same policy applied globally.
+new_cwd = "follow"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Key bindings
+#
+# Syntax: "prefix+x" is prefix-then-x; "ctrl+alt+x" is a direct chord that needs
+# no prefix. An array binds several chords to one action.
+# ─────────────────────────────────────────────────────────────────────────────
+[keys]
+# tmux.conf never rebinds the prefix, so this is ctrl+b on both.
+prefix = "ctrl+b"
+
+# ── Splits and new tabs ──────────────────────────────────────────────────────
+# tmux binds both the mnemonic (| and -) and the stock (% and ") pairs; all four
+# are kept, alongside herdr's own v/minus. Note the naming inversion: herdr's
+# "vertical" is a vertical *divider* (panes side by side) = tmux's split-window
+# -h, and "horizontal" is a horizontal divider (stacked) = tmux's -v.
+split_vertical   = ["prefix+|", "prefix+%", "prefix+v"]
+split_horizontal = ["prefix+minus", "prefix+\""]
+new_tab          = "prefix+c"
+close_pane       = "prefix+x"
+close_tab        = ["prefix+ampersand", "prefix+shift+x"]   # tmux: prefix &
+rename_tab       = ["prefix+comma", "prefix+shift+t"]       # tmux: prefix ,
+rename_pane      = "prefix+shift+p"
+zoom             = "prefix+z"
+
+# ── Pane traversal ───────────────────────────────────────────────────────────
+# tmux.conf gets bare C-h/j/k/l via the vim-tmux-navigator protocol: an is_vim
+# guard inspects the pane's foreground process and forwards the key to nvim
+# instead of moving panes. herdr has no equivalent hook, and a bare ctrl+h/j/k/l
+# here would be swallowed before nvim ever saw it -- breaking split navigation
+# inside every editor pane.
+#
+# So the prefixed pair (tmux's `bind -r h/j/k/l`) is kept verbatim, and
+# ctrl+alt+h/j/k/l is added as the prefix-free chord. nvim binds neither, so the
+# two coexist: ctrl+alt moves herdr panes, plain ctrl-hjkl stays with nvim.
+# Consequence: inside herdr, nvim's <C-h/j/k/l> moves between nvim splits only
+# and will not continue into the neighbouring herdr pane the way it does in tmux
+# (nvim/lua/my/plugins/tmux-navigator.lua degrades to plain wincmd off-tmux).
+focus_pane_left  = ["prefix+h", "ctrl+alt+h"]
+focus_pane_down  = ["prefix+j", "ctrl+alt+j"]
+focus_pane_up    = ["prefix+k", "ctrl+alt+k"]
+focus_pane_right = ["prefix+l", "ctrl+alt+l"]
+
+cycle_pane_next     = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+last_pane           = "prefix+;"                            # tmux: prefix ;
+
+# ── Resizing and swapping ────────────────────────────────────────────────────
+# The one binding that could not be carried over. tmux.conf resizes with
+# repeatable prefix+H/J/K/L; herdr instead has a resize *mode* -- enter it once,
+# then h/j/k/l resize until Esc -- which cannot be bound to four direction keys.
+# The ergonomics survive (press prefix R, then hold a direction, same as holding
+# a direction under tmux's repeat-time), but the keys do not: prefix+H/J/K/L
+# stays on herdr's swap-pane, which tmux.conf leaves unbound anyway.
+resize_mode     = "prefix+shift+r"
+swap_pane_left  = "prefix+shift+h"
+swap_pane_down  = "prefix+shift+j"
+swap_pane_up    = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+
+# ── Tabs (tmux windows) ──────────────────────────────────────────────────────
+next_tab     = "prefix+n"
+previous_tab = "prefix+p"
+switch_tab   = "prefix+1..9"
+
+# ── Workspaces (tmux sessions) ───────────────────────────────────────────────
+# prefix+s is tmux's session tree and prefix+w its window list; both land on
+# herdr's picker. That displaces herdr's settings binding to prefix+S.
+workspace_picker    = ["prefix+w", "prefix+s"]
+settings            = "prefix+shift+s"
+
+# tmux.conf's prefix+C-j opens an fzf session switcher in a popup because `dev`
+# starts three sessions at once. herdr's goto navigator is the built-in version
+# of exactly that, so it answers to both keys.
+goto                = ["prefix+g", "prefix+ctrl+j"]
+
+new_workspace       = "prefix+shift+n"
+rename_workspace    = ["prefix+shift+w", "prefix+$"]        # tmux: prefix $
+close_workspace     = "prefix+shift+d"
+# tmux: prefix ( and prefix ). The parens parse, but ctrl+n/ctrl+p is the
+# steadier chord and reads as the tab bindings one level up.
+previous_workspace  = ["prefix+ctrl+p", "prefix+("]
+next_workspace      = ["prefix+ctrl+n", "prefix+)"]
+switch_workspace    = "prefix+shift+1..9"
+
+# ── Session, config, copy ────────────────────────────────────────────────────
+detach        = ["prefix+d", "prefix+q"]                    # tmux: prefix d
+reload_config = "prefix+r"                                  # tmux: prefix r
+help          = "prefix+?"                                  # tmux: prefix ?
+
+# tmux.conf sets mode-keys vi and hand-binds v / C-v / y / Escape. herdr's copy
+# mode is already vi-style out of the box -- hjkl and search motions, v or Space
+# to select, y or Enter to copy, Esc to cancel -- and those inner keys are not
+# configurable, so there is nothing to translate.
+copy_mode = "prefix+["
+
+# ── herdr-native, no tmux counterpart ────────────────────────────────────────
+toggle_sidebar           = "prefix+b"
+edit_scrollback          = "prefix+e"   # focused pane's scrollback in $EDITOR
+open_notification_target = "prefix+o"   # jump to whichever agent wants you
+new_worktree             = "prefix+shift+g"
+focus_agent              = "prefix+alt+1..9"
+
+# tmux.conf's prefix+C-g throwaway shell: display-popup -E -w 80% -h 75% rooted
+# at the current pane's directory. herdr runs popup commands from the focused
+# pane's cwd already, so only the geometry needs restating.
+[[keys.command]]
+key = "prefix+ctrl+g"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+description = "throwaway shell"
+width = "80%"
+height = "75%"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Theme — kanagawa dragon
+#
+# Same target as `theme = Kanagawa Dragon` in ghostty/config, `colorscheme
+# kanagawa-dragon` in nvim, and the palette block in tmux.conf. herdr ships a
+# built-in `kanagawa`; the overrides below pin it to the dragon variant using
+# the exact hex values already recorded in tmux.conf (lifted there from
+# rebelot/kanagawa.nvim, lua/kanagawa/colors.lua).
+# ─────────────────────────────────────────────────────────────────────────────
+[theme]
+name = "kanagawa"
+
+[theme.custom]
+# tmux.conf's status bar uses bg=default, and notes it is load-bearing: it is
+# what lets ghostty's `background-opacity = 0.9` show through. "reset" is the
+# same escape hatch here.
+panel_bg = "reset"
+
+text     = "#c5c9c5"   # WHITE
+subtext0 = "#a6a69c"   # GRAY
+surface0 = "#282727"   # BLACK4
+surface1 = "#393836"   # BLACK5
+overlay0 = "#737c73"   # ASH
+yellow   = "#c4b28a"
+red      = "#c4746e"
+blue     = "#8ba4b0"
+# tmux.conf paints the active pane border BLUE and everything inactive in ash.
+# Set in both places on purpose: theme.custom.accent overrides the token in the
+# base theme, ui.accent drives highlights, borders, and the navigation UI. Same
+# value in each, so whichever takes precedence lands on the tmux colour.
+accent   = "#8ba4b0"
+
+[ui]
+accent = "#8ba4b0"
+
+# tmux's `prefix c` opens a window immediately; herdr asks for a name first.
+# Turn the prompt off so the key behaves the way the fingers expect. Tabs are
+# named automatically and prefix+, renames one after the fact.
+prompt_new_tab_name = false
+
+# tmux.conf sets `mouse on`.
+mouse_capture = true

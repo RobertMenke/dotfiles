@@ -50,6 +50,14 @@ in
       source = pickSource "ghostty" ../../../ghostty;
       recursive = true;
     };
+    # Deliberately a single-file entry rather than a directory symlink, unlike
+    # its neighbours. herdr treats ~/.config/herdr as writable state, not just
+    # config: it drops herdr-server.log, herdr-client.log, session.json, and
+    # .plugins.lock in there. Pointing the whole directory at the store would
+    # leave herdr with nowhere to write. Linking the one file keeps the parent a
+    # real directory. `recursive = true` would also work, but this states the
+    # intent plainly and sidesteps the frozen-file-list trap noted for aerospace.
+    "herdr/config.toml".source = pickSource "herdr/config.toml" ../../../herdr/config.toml;
     "alacritty.toml".source = pickSource "alacritty.toml" ../../../alacritty.toml;
     "starship.toml".source = pickSource "starship.toml" ../../../starship.toml;
   };
