@@ -73,6 +73,7 @@ in
       gh
       git
       granted
+      herdr
       imagemagick
       jq
       k9s
