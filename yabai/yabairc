@@ -33,6 +33,10 @@ yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
 yabai -m rule --add app="^CleanShot X$" manage=off
 yabai -m rule --add app="^JetBrains Toolbox$" manage=off
+# Zoom orders its main window off-screen instead of destroying it on close,
+# but AX still reports it as a standard, non-minimized window -- so yabai
+# tiles an invisible ghost that reserves half the space. Never manage Zoom.
+yabai -m rule --add app="^Zoom$" manage=off
 
 # Automatically focus remaining window when removing a window
 yabai -m signal --add event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent"

@@ -44,6 +44,8 @@ in
     GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
     GOPRIVATE = "go.1password.io,gitlab.1password.io,proto.1infra.dev,github.com/agilebits-inc";
     CLOUDSMITH_API_KEY = "op://Employee/Cloudsmith API Key/credential";
+    SOURCEGRAPH_ENDPOINT = "https://1password.sourcegraphcloud.com";
+    SOURCEGRAPH_ACCESS_TOKEN = "op://Employee/ohojzlff6y535ahrgtr2wdcqa4/credential";
   };
 
   programs = {
