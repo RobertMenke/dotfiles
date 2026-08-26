@@ -32,6 +32,12 @@ in
         IdentityFile = "~/.ssh/github-personal.pub";
         IdentitiesOnly = true;
       };
+      "github-1p-public" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/github-1p-public.pub";
+        IdentitiesOnly = true;
+      };
       "*" = {
         # The embedded quotes are load-bearing: the socket path contains a
         # space ("Group Containers").

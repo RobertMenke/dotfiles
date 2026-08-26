@@ -8,6 +8,14 @@
 let
   # Keep in sync with `lib/mkDarwin.nix`.
   ffmpegFullDarwinWorkarounds = final: prev: {
+    # tmux 3.7c makes configure abort on darwin unless a jemalloc choice is
+    # given explicitly; nixpkgs c8f90650 (2026-08-22) passes neither flag.
+    # Mirrors the upstream fix (nixpkgs 56d4d71, 2026-08-23); drop the
+    # override once nixpkgs-unstable advances past it.
+    tmux = prev.tmux.overrideAttrs (old: {
+      buildInputs = (old.buildInputs or [ ]) ++ [ final.jemalloc ];
+      configureFlags = (old.configureFlags or [ ]) ++ [ "--enable-jemalloc" ];
+    });
     chromaprint =
       (prev.chromaprint.override {
         withTools = false;
@@ -98,20 +106,19 @@ in
       atuin
     ];
 
-  home.sessionPath =
-    [
-      "$HOME/.local/bin"
-    ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
-      "$HOME/go/bin"
-      "/Applications/Ghostty.app/Contents/MacOS"
-      "$HOME/Applications/GoLand.app/Contents/MacOS"
-      "/opt/homebrew/bin"
-    ]
-    ++ lib.optionals (config.myConfig.host.role == "work") [
-      "/Users/${config.myConfig.user.username}/.dotnet/tools"
-      "$HOME/.cargo/bin"
-    ];
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ]
+  ++ lib.optionals pkgs.stdenv.isDarwin [
+    "$HOME/go/bin"
+    "/Applications/Ghostty.app/Contents/MacOS"
+    "$HOME/Applications/GoLand.app/Contents/MacOS"
+    "/opt/homebrew/bin"
+  ]
+  ++ lib.optionals (config.myConfig.host.role == "work") [
+    "/Users/${config.myConfig.user.username}/.dotnet/tools"
+    "$HOME/.cargo/bin"
+  ];
 
   home.sessionVariables = { };
 
