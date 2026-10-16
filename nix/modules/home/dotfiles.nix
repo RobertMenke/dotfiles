@@ -1,6 +1,13 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   live = config.myConfig.dotfiles.liveSourceDir;
+  inherit (config.myConfig.host) isDarwin;
+  fish = "${config.home.homeDirectory}/.local/bin/fish";
 
   # `pickSource name storePath` returns either:
   #   - an out-of-store symlink to "${live}/${name}" (live edit, no rebuild
@@ -12,55 +19,94 @@ let
   pickSource =
     name: storePath:
     if live != null then config.lib.file.mkOutOfStoreSymlink "${live}/${name}" else storePath;
+
+  # Same choice as `pickSource`, but as a plain path string, for configs that
+  # pull a shared file in by reference rather than being symlinked to it.
+  pickPath = name: storePath: if live != null then "${live}/${name}" else "${storePath}";
+
+  vscodeUserDir = if isDarwin then "Library/Application Support/Code/User" else ".config/Code/User";
 in
 {
   # Application configs that live in $XDG_CONFIG_HOME (~/.config).
-  xdg.configFile = {
-    nvim = {
-      source = pickSource "nvim" ../../../nvim;
-      # `recursive` only for the bootstrap (store-copy) case. In live mode a
-      # single whole-directory symlink avoids the frozen-file-list trap
-      # described for aerospace below: with `recursive = true` the build-time
-      # enumeration of the live checkout is baked into the store without
-      # affecting the derivation hash, so files added later (e.g. a new
-      # plugin spec) never appear in ~/.config/nvim on switch.
-      recursive = live == null;
-    };
-    yabai = {
-      source = pickSource "yabai" ../../../yabai;
-      recursive = true;
-    };
-    skhd = {
-      source = pickSource "skhd" ../../../skhd;
-      recursive = true;
-    };
-    # AeroSpace looks here by default; modules/darwin/window-manager.nix drops
-    # the --config-path flag so this file is what the daemon reads.
-    #
-    # Deliberately NOT recursive, unlike its neighbours. `recursive` makes
-    # home-manager enumerate the source directory at *build* time, which only
-    # works here because `sandbox = false` lets the builder read the live
-    # checkout. The resulting file list is frozen into the store, but the
-    # derivation hash doesn't depend on it, so nix can never invalidate it.
-    # That turned a stray `aerospace.toml.bak` into a permanent phantom entry
-    # that reappeared on every switch. AeroSpace only ever reads this
-    # directory, so one whole-directory symlink is both sufficient and immune.
-    aerospace.source = pickSource "aerospace" ../../../aerospace;
-    ghostty = {
-      source = pickSource "ghostty" ../../../ghostty;
-      recursive = true;
-    };
-    # Deliberately a single-file entry rather than a directory symlink, unlike
-    # its neighbours. herdr treats ~/.config/herdr as writable state, not just
-    # config: it drops herdr-server.log, herdr-client.log, session.json, and
-    # .plugins.lock in there. Pointing the whole directory at the store would
-    # leave herdr with nowhere to write. Linking the one file keeps the parent a
-    # real directory. `recursive = true` would also work, but this states the
-    # intent plainly and sidesteps the frozen-file-list trap noted for aerospace.
-    "herdr/config.toml".source = pickSource "herdr/config.toml" ../../../herdr/config.toml;
-    "alacritty.toml".source = pickSource "alacritty.toml" ../../../alacritty.toml;
-    "starship.toml".source = pickSource "starship.toml" ../../../starship.toml;
-  };
+  xdg.configFile = lib.mkMerge [
+    {
+      nvim = {
+        source = pickSource "nvim" ../../../nvim;
+        # `recursive` only for the bootstrap (store-copy) case. In live mode a
+        # single whole-directory symlink avoids the frozen-file-list trap
+        # described for aerospace below: with `recursive = true` the build-time
+        # enumeration of the live checkout is baked into the store without
+        # affecting the derivation hash, so files added later (e.g. a new
+        # plugin spec) never appear in ~/.config/nvim on switch.
+        recursive = live == null;
+      };
+      # Deliberately a single-file entry rather than a directory symlink, unlike
+      # its neighbours. herdr treats ~/.config/herdr as writable state, not just
+      # config: it drops herdr-server.log, herdr-client.log, session.json, and
+      # .plugins.lock in there. Pointing the whole directory at the store would
+      # leave herdr with nowhere to write. Linking the one file keeps the parent a
+      # real directory. `recursive = true` would also work, but this states the
+      # intent plainly and sidesteps the frozen-file-list trap noted for aerospace.
+      "herdr/config.toml".source = pickSource "herdr/config.toml" ../../../herdr/config.toml;
+      "starship.toml".source = pickSource "starship.toml" ../../../starship.toml;
+    }
+
+    (lib.mkIf isDarwin {
+      yabai = {
+        source = pickSource "yabai" ../../../yabai;
+        recursive = true;
+      };
+      skhd = {
+        source = pickSource "skhd" ../../../skhd;
+        recursive = true;
+      };
+      # AeroSpace looks here by default; modules/darwin/window-manager.nix drops
+      # the --config-path flag so this file is what the daemon reads.
+      #
+      # Deliberately NOT recursive, unlike its neighbours. `recursive` makes
+      # home-manager enumerate the source directory at *build* time, which only
+      # works here because `sandbox = false` lets the builder read the live
+      # checkout. The resulting file list is frozen into the store, but the
+      # derivation hash doesn't depend on it, so nix can never invalidate it.
+      # That turned a stray `aerospace.toml.bak` into a permanent phantom entry
+      # that reappeared on every switch. AeroSpace only ever reads this
+      # directory, so one whole-directory symlink is both sufficient and immune.
+      aerospace.source = pickSource "aerospace" ../../../aerospace;
+      ghostty = {
+        source = pickSource "ghostty" ../../../ghostty;
+        recursive = true;
+      };
+      "alacritty.toml".source = pickSource "alacritty.toml" ../../../alacritty.toml;
+    })
+
+    # The terminal configs are shared with the macs verbatim, and both pin the
+    # shell to the nix-darwin path (/run/current-system/sw/bin/fish), which
+    # doesn't exist here. Rather than fork them, generate a small Linux entry
+    # point that loads the shared file and then overrides just the shell.
+    (lib.mkIf (!isDarwin) {
+      # Later `config-file`s win, so the overrides go last.
+      "ghostty/config".text = ''
+        # Generated by home-manager (nix/modules/home/dotfiles.nix).
+        config-file = ${pickPath "ghostty/config" ../../../ghostty/config}
+        config-file = ${pkgs.writeText "ghostty-linux.conf" ''
+          command = ${fish}
+          initial-command = ${fish}
+        ''}
+      '';
+      # alacritty reads alacritty/alacritty.toml ahead of alacritty.toml, and
+      # the main file overrides anything it imports.
+      "alacritty/alacritty.toml".text = ''
+        # Generated by home-manager (nix/modules/home/dotfiles.nix).
+        [general]
+        import = ["${pickPath "alacritty.toml" ../../../alacritty.toml}"]
+
+        # Same (legacy) table name as the shared file, so this replaces its
+        # value instead of racing it.
+        [shell]
+        program = "${fish}"
+      '';
+    })
+  ];
 
   # Configs not under XDG.
   home.file = {
@@ -68,6 +114,11 @@ in
       source = pickSource "tmux.conf" ../../../tmux.conf;
       target = "${config.home.homeDirectory}/.tmux.conf";
     };
+
+    # Personal scripts, on $PATH via home.sessionPath. One whole-directory
+    # link (not recursive) so scripts added to the checkout appear without a
+    # rebuild; see the aerospace note above.
+    ".local/bin/scripts".source = pickSource "scripts" ../../../scripts;
 
     # Symlink fish to .local/bin so we can hard-code it as the default shell
     # in tmux.conf without referencing the username.
@@ -79,11 +130,11 @@ in
     # VSCode user settings.
     "settings.json" = {
       source = pickSource "vscode/settings.json" ../../../vscode/settings.json;
-      target = "${config.home.homeDirectory}/Library/Application Support/Code/User/settings.json";
+      target = "${config.home.homeDirectory}/${vscodeUserDir}/settings.json";
     };
     "keybindings.json" = {
       source = pickSource "vscode/keybindings.json" ../../../vscode/keybindings.json;
-      target = "${config.home.homeDirectory}/Library/Application Support/Code/User/keybindings.json";
+      target = "${config.home.homeDirectory}/${vscodeUserDir}/keybindings.json";
     };
   };
 }

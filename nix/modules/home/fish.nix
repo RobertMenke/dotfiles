@@ -44,6 +44,8 @@ in
     GITLAB_TOKEN = "op://Employee/olmsgg4xktttuz5bpeefp7dj6q/credential";
     GOPRIVATE = "go.1password.io,gitlab.1password.io,proto.1infra.dev,github.com/agilebits-inc";
     CLOUDSMITH_API_KEY = "op://Employee/Cloudsmith API Key/credential";
+    SOURCEGRAPH_ENDPOINT = "https://1password.sourcegraphcloud.com";
+    SOURCEGRAPH_ACCESS_TOKEN = "op://Employee/ohojzlff6y535ahrgtr2wdcqa4/credential";
   };
 
   programs = {
@@ -100,53 +102,66 @@ in
         yarn = "op run --account agilebits --no-masking -- yarn";
       };
 
-      shellInit = ''
-        # direnv hooks itself in via the vendor conf.d file that ships with
-        # the package; starship and zoxide are sourced from
-        # `interactiveShellInit` below. See the note in `default.nix` for why
-        # their Home Manager fish integrations are off.
-
-        # Activate the default node without loading nvm.
-        #
-        # We used to do `bass source $NVM_DIR/nvm.sh --no-use ';' nvm use
-        # default`, which cost 0.6-1.5s of *every* shell start: `bass` forks a
-        # python3 to marshal the environment, that python3 forks a bash, and
-        # that bash sources ~4k lines of nvm.sh before `nvm use` walks the
-        # filesystem to resolve the alias.
-        #
-        # The only thing all of that accomplishes at startup is putting one
-        # bin dir on $PATH and exporting NVM_BIN/NVM_INC, so do it directly.
-        # `nvm` itself is still a function (below) that sources the real
-        # nvm.sh through bass, so `nvm install`/`nvm use`/`nvm ls` are
-        # unchanged — they just no longer tax shells that never call them.
-        if test -d "$NVM_DIR/versions/node"
-          set -l nvm_default node
-          test -s "$NVM_DIR/alias/default"
-            and set nvm_default (string trim <"$NVM_DIR/alias/default")
-
-          set -l nvm_version
-          if string match -qr '^v?\d+\.\d+\.\d+$' -- $nvm_default
-            # Pinned exactly, e.g. `v20.17.0`.
-            set nvm_version (string replace -r '^v?' v -- $nvm_default)
-          else
-            # `node`, `stable`, `lts/*`, a named alias... all of nvm's
-            # floating aliases resolve to "newest installed" for a local
-            # `nvm use`, so take that rather than reimplementing nvm's alias
-            # rules here. If you pin `default` to a specific version this
-            # branch is skipped entirely.
-            set nvm_version (path basename $NVM_DIR/versions/node/* | sort -V | tail -1)
+      shellInit =
+        lib.optionalString (!config.myConfig.host.isDarwin) ''
+          # On non-NixOS Linux nothing system-wide puts nix on fish's $PATH:
+          # the installer only hooks bash/zsh, and fish is often started
+          # straight from the terminal rather than as a login shell. The
+          # nix-daemon script is guarded, so this is a no-op when the session
+          # already has it (modules/omarchy/desktop.nix wires it into uwsm).
+          if not set -q __ETC_PROFILE_NIX_SOURCED
+            and test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+            source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
           end
 
-          if test -d "$NVM_DIR/versions/node/$nvm_version/bin"
-            set -gx NVM_BIN "$NVM_DIR/versions/node/$nvm_version/bin"
-            set -gx NVM_INC "$NVM_DIR/versions/node/$nvm_version/include/node"
-            # Strip any nvm bin dirs already on $PATH before prepending the
-            # active one, so re-execs (`reload`, `nh switch`, nested shells)
-            # don't stack up stale node versions the way they inherit them.
-            set -gx PATH $NVM_BIN (string match -v -- "$NVM_DIR/versions/node/*" $PATH)
+        ''
+        + ''
+          # direnv hooks itself in via the vendor conf.d file that ships with
+          # the package; starship and zoxide are sourced from
+          # `interactiveShellInit` below. See the note in `default.nix` for why
+          # their Home Manager fish integrations are off.
+
+          # Activate the default node without loading nvm.
+          #
+          # We used to do `bass source $NVM_DIR/nvm.sh --no-use ';' nvm use
+          # default`, which cost 0.6-1.5s of *every* shell start: `bass` forks a
+          # python3 to marshal the environment, that python3 forks a bash, and
+          # that bash sources ~4k lines of nvm.sh before `nvm use` walks the
+          # filesystem to resolve the alias.
+          #
+          # The only thing all of that accomplishes at startup is putting one
+          # bin dir on $PATH and exporting NVM_BIN/NVM_INC, so do it directly.
+          # `nvm` itself is still a function (below) that sources the real
+          # nvm.sh through bass, so `nvm install`/`nvm use`/`nvm ls` are
+          # unchanged — they just no longer tax shells that never call them.
+          if test -d "$NVM_DIR/versions/node"
+            set -l nvm_default node
+            test -s "$NVM_DIR/alias/default"
+              and set nvm_default (string trim <"$NVM_DIR/alias/default")
+
+            set -l nvm_version
+            if string match -qr '^v?\d+\.\d+\.\d+$' -- $nvm_default
+              # Pinned exactly, e.g. `v20.17.0`.
+              set nvm_version (string replace -r '^v?' v -- $nvm_default)
+            else
+              # `node`, `stable`, `lts/*`, a named alias... all of nvm's
+              # floating aliases resolve to "newest installed" for a local
+              # `nvm use`, so take that rather than reimplementing nvm's alias
+              # rules here. If you pin `default` to a specific version this
+              # branch is skipped entirely.
+              set nvm_version (path basename $NVM_DIR/versions/node/* | sort -V | tail -1)
+            end
+
+            if test -d "$NVM_DIR/versions/node/$nvm_version/bin"
+              set -gx NVM_BIN "$NVM_DIR/versions/node/$nvm_version/bin"
+              set -gx NVM_INC "$NVM_DIR/versions/node/$nvm_version/include/node"
+              # Strip any nvm bin dirs already on $PATH before prepending the
+              # active one, so re-execs (`reload`, `nh switch`, nested shells)
+              # don't stack up stale node versions the way they inherit them.
+              set -gx PATH $NVM_BIN (string match -v -- "$NVM_DIR/versions/node/*" $PATH)
+            end
           end
-        end
-      '';
+        '';
 
       interactiveShellInit = ''
         # Prompt and jump-around, from init output baked at build time rather
@@ -265,32 +280,44 @@ in
         };
         nh = {
           description = "Wrap nh; auto-reload fish after a successful switch/rollback so new session vars / PATH take effect";
-          body = ''
-            command nh $argv
-            set -l rc $status
-
-            # A child process cannot mutate its parent shell's environment,
-            # so after a successful generation flip we re-exec fish in place.
-            # This preserves the terminal/tmux pane but re-runs config.fish,
-            # picks up the new $PATH, $NVM_DIR, hm-session-vars, etc.
-            #
-            # We `set -e __HM_SESS_VARS_SOURCED` first because home-manager
-            # guards hm-session-vars.fish with that exported flag — without
-            # erasing it, the new shell would skip session-var setup and
-            # inherit stale values from the parent.
-            if test $rc -eq 0
-              and begin
-                contains -- switch $argv
-                or contains -- rollback $argv
+          body =
+            lib.optionalString (!config.myConfig.host.isDarwin) ''
+              # Determinate Nix emits log activity types nix-output-monitor
+              # can't parse yet, so builds spew red errors. Use plain output.
+              # Inserted right after the subcommand so it lands before any
+              # `--` passthrough args.
+              if contains -- "$argv[1]" home os
+                and contains -- "$argv[2]" switch build boot test
+                set argv $argv[1..2] --no-nom $argv[3..]
               end
-              echo
-              echo "  reloading fish to pick up new session vars..."
-              set -e __HM_SESS_VARS_SOURCED
-              exec fish
-            end
 
-            return $rc
-          '';
+            ''
+            + ''
+              command nh $argv
+              set -l rc $status
+
+              # A child process cannot mutate its parent shell's environment,
+              # so after a successful generation flip we re-exec fish in place.
+              # This preserves the terminal/tmux pane but re-runs config.fish,
+              # picks up the new $PATH, $NVM_DIR, hm-session-vars, etc.
+              #
+              # We `set -e __HM_SESS_VARS_SOURCED` first because home-manager
+              # guards hm-session-vars.fish with that exported flag — without
+              # erasing it, the new shell would skip session-var setup and
+              # inherit stale values from the parent.
+              if test $rc -eq 0
+                and begin
+                  contains -- switch $argv
+                  or contains -- rollback $argv
+                end
+                echo
+                echo "  reloading fish to pick up new session vars..."
+                set -e __HM_SESS_VARS_SOURCED
+                exec fish
+              end
+
+              return $rc
+            '';
         };
       };
     };

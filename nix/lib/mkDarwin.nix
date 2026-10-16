@@ -8,6 +8,14 @@ let
   # under current nixpkgs (chromaprint/ffmpeg link; kvazaar CTest spawns ffmpeg
   # and gets SIGKILL in the nix sandbox).
   ffmpegFullDarwinWorkarounds = final: prev: {
+    # tmux 3.7c makes configure abort on darwin unless a jemalloc choice is
+    # given explicitly; nixpkgs c8f90650 (2026-08-22) passes neither flag.
+    # Mirrors the upstream fix (nixpkgs 56d4d71, 2026-08-23); drop the
+    # override once nixpkgs-unstable advances past it.
+    tmux = prev.tmux.overrideAttrs (old: {
+      buildInputs = (old.buildInputs or [ ]) ++ [ final.jemalloc ];
+      configureFlags = (old.configureFlags or [ ]) ++ [ "--enable-jemalloc" ];
+    });
     chromaprint =
       (prev.chromaprint.override {
         withTools = false;

@@ -42,7 +42,10 @@ in
       isDarwin = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether this host is macOS. Linux support is aspirational.";
+        description = ''
+          Whether this host is macOS. False means a Linux host running
+          standalone home-manager (see lib/mkHome.nix).
+        '';
       };
     };
 
