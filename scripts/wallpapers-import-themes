@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copy Omarchy theme backgrounds into the synced wallpapers folder
-# (~/Pictures/Wallpapers, shared with the mac by syncthing), so they're
+# (~/Pictures/Wallpapers/omarchy, shared with the mac by syncthing), so they're
 # available on every machine. Safe to rerun: files already copied are
 # skipped, so it only picks up backgrounds from new or updated themes.
 #
@@ -12,18 +12,19 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [-n] [-l] [theme...]
 
-Copy Omarchy theme backgrounds into ${WALLPAPERS_DIR:-~/Pictures/Wallpapers}.
+Copy Omarchy theme backgrounds into ${WALLPAPERS_DIR:-~/Pictures/Wallpapers}/omarchy.
 With no themes given, every installed theme is imported.
 
   -n, --dry-run   show what would be copied without copying
   -l, --list      list installed themes and their background counts
   -h, --help      show this help
 
-Set WALLPAPERS_DIR to copy somewhere else.
+Set WALLPAPERS_DIR to use a different wallpapers folder.
 EOF
 }
 
-dest=${WALLPAPERS_DIR:-$HOME/Pictures/Wallpapers}
+# Kept in a subfolder, apart from the wallpapers collected by hand.
+dest=${WALLPAPERS_DIR:-$HOME/Pictures/Wallpapers}/omarchy
 omarchy=${OMARCHY_PATH:-/usr/share/omarchy}
 dry_run=false
 list=false
