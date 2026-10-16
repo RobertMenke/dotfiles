@@ -45,6 +45,7 @@ in
     ./git.nix
     ./neovim.nix
     ./nh.nix
+    ./syncthing.nix
     ./ssh.nix
   ];
 

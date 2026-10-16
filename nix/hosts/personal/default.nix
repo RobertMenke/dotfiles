@@ -37,6 +37,9 @@ in
       # having to rebuild for every change. Drop this back to `null` if
       # bootstrapping the same config on a new machine for the first time.
       dotfiles.liveSourceDir = "/Users/${username}/dotfiles";
+
+      # ~/Pictures/Wallpapers, kept in sync with the omarchy machine.
+      wallpaperSync.enable = true;
     };
   };
 }
