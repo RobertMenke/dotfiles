@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Copy Omarchy theme backgrounds into the synced wallpapers folder
+# (~/Pictures/Wallpapers, shared with the mac by syncthing), so they're
+# available on every machine. Safe to rerun: files already copied are
+# skipped, so it only picks up backgrounds from new or updated themes.
+#
+# Copies are named <theme>-<file> because themes reuse names like 1.jpg
+# (files that already start with the theme name keep their name).
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [-n] [-l] [theme...]
+
+Copy Omarchy theme backgrounds into ${WALLPAPERS_DIR:-~/Pictures/Wallpapers}.
+With no themes given, every installed theme is imported.
+
+  -n, --dry-run   show what would be copied without copying
+  -l, --list      list installed themes and their background counts
+  -h, --help      show this help
+
+Set WALLPAPERS_DIR to copy somewhere else.
+EOF
+}
+
+dest=${WALLPAPERS_DIR:-$HOME/Pictures/Wallpapers}
+omarchy=${OMARCHY_PATH:-/usr/share/omarchy}
+dry_run=false
+list=false
+themes=()
+
+while (($#)); do
+  case $1 in
+    -n | --dry-run) dry_run=true ;;
+    -l | --list) list=true ;;
+    -h | --help) usage; exit 0 ;;
+    -*) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *) themes+=("$1") ;;
+  esac
+  shift
+done
+
+[[ -d $omarchy/themes ]] || { echo "Omarchy themes not found at $omarchy/themes" >&2; exit 1; }
+
+# Stock themes plus user-installed ones; a user theme with the same name
+# overrides the stock one, as in Omarchy itself.
+declare -A theme_dirs
+for dir in "$omarchy"/themes/* "$HOME"/.config/omarchy/themes/*; do
+  [[ -d $dir/backgrounds ]] && theme_dirs[$(basename "$dir")]=$dir/backgrounds
+done
+
+# Same extensions Omarchy's background picker accepts.
+backgrounds_in() {
+  find -L "$1" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \
+    -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.webp' \) -print0 | sort -z
+}
+
+if $list; then
+  for name in $(printf '%s\n' "${!theme_dirs[@]}" | sort); do
+    printf '%-20s %s\n' "$name" "$(backgrounds_in "${theme_dirs[$name]}" | tr -cd '\0' | wc -c)"
+  done
+  exit 0
+fi
+
+if ((${#themes[@]} == 0)); then
+  mapfile -t themes < <(printf '%s\n' "${!theme_dirs[@]}" | sort)
+fi
+
+$dry_run || mkdir -p "$dest"
+copied=0 skipped=0
+for name in "${themes[@]}"; do
+  # Accept display names too ("Tokyo Night" -> tokyo-night).
+  slug=$(tr '[:upper:] ' '[:lower:]-' <<<"$name")
+  src=${theme_dirs[$slug]:-}
+  [[ -n $src ]] || { echo "No theme named '$name' (try --list)" >&2; exit 1; }
+
+  while IFS= read -r -d '' file; do
+    base=$(basename "$file")
+    # Some themes already prefix their files (aetheria-1-4k.jpg).
+    [[ ${base,,} == "$slug"[-_]* ]] || base=$slug-$base
+    target=$dest/$base
+    if [[ -e $target ]]; then
+      skipped=$((skipped + 1))
+    elif $dry_run; then
+      echo "would copy $file -> $target"
+      copied=$((copied + 1))
+    else
+      cp -L "$file" "$target"
+      copied=$((copied + 1))
+    fi
+  done < <(backgrounds_in "$src")
+done
+
+if $dry_run; then
+  echo "Would copy $copied, skip $skipped already in $dest"
+else
+  echo "Copied $copied, skipped $skipped already in $dest"
+fi
