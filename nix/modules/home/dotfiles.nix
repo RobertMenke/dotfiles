@@ -107,6 +107,11 @@ in
       target = "${config.home.homeDirectory}/.tmux.conf";
     };
 
+    # Personal scripts, on $PATH via home.sessionPath. One whole-directory
+    # link (not recursive) so scripts added to the checkout appear without a
+    # rebuild; see the aerospace note above.
+    ".local/bin/scripts".source = pickSource "scripts" ../../../scripts;
+
     # Symlink fish to .local/bin so we can hard-code it as the default shell
     # in tmux.conf without referencing the username.
     ".local/bin/fish" = {

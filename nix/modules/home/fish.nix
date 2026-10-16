@@ -280,32 +280,44 @@ in
         };
         nh = {
           description = "Wrap nh; auto-reload fish after a successful switch/rollback so new session vars / PATH take effect";
-          body = ''
-            command nh $argv
-            set -l rc $status
-
-            # A child process cannot mutate its parent shell's environment,
-            # so after a successful generation flip we re-exec fish in place.
-            # This preserves the terminal/tmux pane but re-runs config.fish,
-            # picks up the new $PATH, $NVM_DIR, hm-session-vars, etc.
-            #
-            # We `set -e __HM_SESS_VARS_SOURCED` first because home-manager
-            # guards hm-session-vars.fish with that exported flag — without
-            # erasing it, the new shell would skip session-var setup and
-            # inherit stale values from the parent.
-            if test $rc -eq 0
-              and begin
-                contains -- switch $argv
-                or contains -- rollback $argv
+          body =
+            lib.optionalString (!config.myConfig.host.isDarwin) ''
+              # Determinate Nix emits log activity types nix-output-monitor
+              # can't parse yet, so builds spew red errors. Use plain output.
+              # Inserted right after the subcommand so it lands before any
+              # `--` passthrough args.
+              if contains -- "$argv[1]" home os
+                and contains -- "$argv[2]" switch build boot test
+                set argv $argv[1..2] --no-nom $argv[3..]
               end
-              echo
-              echo "  reloading fish to pick up new session vars..."
-              set -e __HM_SESS_VARS_SOURCED
-              exec fish
-            end
 
-            return $rc
-          '';
+            ''
+            + ''
+              command nh $argv
+              set -l rc $status
+
+              # A child process cannot mutate its parent shell's environment,
+              # so after a successful generation flip we re-exec fish in place.
+              # This preserves the terminal/tmux pane but re-runs config.fish,
+              # picks up the new $PATH, $NVM_DIR, hm-session-vars, etc.
+              #
+              # We `set -e __HM_SESS_VARS_SOURCED` first because home-manager
+              # guards hm-session-vars.fish with that exported flag — without
+              # erasing it, the new shell would skip session-var setup and
+              # inherit stale values from the parent.
+              if test $rc -eq 0
+                and begin
+                  contains -- switch $argv
+                  or contains -- rollback $argv
+                end
+                echo
+                echo "  reloading fish to pick up new session vars..."
+                set -e __HM_SESS_VARS_SOURCED
+                exec fish
+              end
+
+              return $rc
+            '';
         };
       };
     };

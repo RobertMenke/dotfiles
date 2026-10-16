@@ -27,6 +27,9 @@ in
     # writable checkout rather than the read-only store.
     dotfiles.liveSourceDir = "/home/${username}/dotfiles";
 
+    # ~/Pictures/Wallpapers, kept in sync with the personal mac.
+    wallpaperSync.enable = true;
+
     # rEFInd on the Linux ESP: Windows (blue pill) or Omarchy via Limine (red
     # pill). Built here, written to /boot by `refind-sync` (needs sudo).
     refind = {

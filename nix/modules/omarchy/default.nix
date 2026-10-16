@@ -5,7 +5,9 @@
   imports = [
     ./desktop.nix
     ./ghostty.nix
+    ./hyprland.nix
     ./refind.nix
     ./shell.nix
+    ./wallpapers.nix
   ];
 }

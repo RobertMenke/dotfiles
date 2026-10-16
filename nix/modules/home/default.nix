@@ -45,6 +45,7 @@ in
     ./git.nix
     ./neovim.nix
     ./nh.nix
+    ./syncthing.nix
     ./ssh.nix
   ];
 
@@ -120,6 +121,8 @@ in
     ];
 
   home.sessionPath = [
+    # Personal scripts, linked from ~/dotfiles/scripts (dotfiles.nix).
+    "$HOME/.local/bin/scripts"
     "$HOME/.local/bin"
     "$HOME/go/bin"
   ]
