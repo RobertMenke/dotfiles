@@ -1,6 +1,10 @@
 { config, ... }:
 let
-  sshAuthSock = "${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
+  sshAuthSock =
+    if config.myConfig.host.isDarwin then
+      "${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    else
+      "${config.home.homeDirectory}/.1password/agent.sock";
 in
 {
   programs.ssh = {
@@ -39,8 +43,8 @@ in
         IdentitiesOnly = true;
       };
       "*" = {
-        # The embedded quotes are load-bearing: the socket path contains a
-        # space ("Group Containers").
+        # The embedded quotes are load-bearing: the macOS socket path
+        # contains a space ("Group Containers").
         IdentityAgent = ''"${sshAuthSock}"'';
       };
     };
