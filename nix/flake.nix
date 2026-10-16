@@ -2,22 +2,27 @@
 #  Robert's nix-darwin + home-manager flake
 # =============================================================================
 #
-#  This flake defines two darwin configurations:
+#  This flake defines two darwin configurations and one standalone
+#  home-manager configuration:
 #
 #      darwinConfigurations."personal"  → user "robert"
 #      darwinConfigurations."work"      → user "robertmenke"
+#      homeConfigurations."omarchy"     → user "robert" on Omarchy (Arch)
 #
 #  Layout:
 #
 #      flake.nix                # this file: inputs + mkDarwin calls
 #      lib/mkDarwin.nix         # darwin-system builder (de-duped host code)
+#      lib/mkHome.nix           # standalone home-manager builder (Linux)
 #      modules/
 #        darwin/                # host-agnostic nix-darwin config
 #        home/                  # host-agnostic home-manager config
 #          options.nix          # `myConfig.*` options consumed by all modules
+#        omarchy/               # home-manager config only for Omarchy hosts
 #      hosts/
 #        personal/              # per-host config: myConfig values + users.users
 #        work/
+#        omarchy/               # home-manager-only host (no nix-darwin)
 #      attic/                   # parking lot for unused modules
 #
 #  ---------------------------------------------------------------------------
@@ -86,6 +91,25 @@
 #      darwin-rebuild switch --flake ~/dotfiles/nix#personal
 #      darwin-rebuild switch --flake ~/dotfiles/nix#work
 #
+#  ---------------------------------------------------------------------------
+#  Omarchy (standalone home-manager on Arch)
+#  ---------------------------------------------------------------------------
+#
+#  There is no system layer: pacman/omarchy own the OS, home-manager owns
+#  $HOME. Day to day:
+#
+#      nh home switch -c omarchy
+#
+#  First run (nix installed, nothing else), from the checkout at ~/dotfiles:
+#
+#      nix run home-manager/master -- switch -b bak --flake ~/dotfiles/nix#omarchy
+#
+#  `-b bak` moves omarchy's stock files (nvim, git, starship, ghostty, ...)
+#  aside instead of refusing to replace them. Things home-manager can't
+#  touch without root (the rEFInd install on the ESP, GPU drivers for nix
+#  GUI apps) are built here and applied with a sudo helper; see
+#  modules/omarchy/.
+#
 # =============================================================================
 
 {
@@ -119,6 +143,7 @@
     }:
     let
       mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; };
+      mkHome = import ./lib/mkHome.nix { inherit inputs; };
 
       # treefmt is system-scoped because the wrapper derivation depends on
       # nixpkgs for the underlying formatter binaries.
@@ -133,6 +158,11 @@
     {
       darwinConfigurations.personal = mkDarwin "personal";
       darwinConfigurations.work = mkDarwin "work";
+
+      homeConfigurations.omarchy = mkHome {
+        hostName = "omarchy";
+        system = "x86_64-linux";
+      };
 
       # `nix fmt .` runs the configured formatters across the flake.
       formatter = forEachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);

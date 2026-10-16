@@ -1,6 +1,12 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (config.myConfig) user;
+  inherit (config.myConfig.host) isDarwin;
 in
 {
   programs.git = {
@@ -30,14 +36,19 @@ in
       gpg = {
         format = "ssh";
         ssh = {
-          program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+          program =
+            if isDarwin then
+              "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+            else
+              "/opt/1Password/op-ssh-sign";
         };
       };
       core = {
         editor = "nvim";
         ignorecase = false;
         pager = "${pkgs.delta}/bin/delta";
-        fsmonitor = true;
+        # git's builtin fsmonitor daemon only exists on macOS and Windows.
+        fsmonitor = isDarwin;
         untrackedcache = true;
       };
       interactive = {

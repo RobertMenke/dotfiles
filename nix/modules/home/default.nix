@@ -6,7 +6,11 @@
   ...
 }:
 let
-  # Keep in sync with `lib/mkDarwin.nix`.
+  inherit (config.myConfig.host) isDarwin;
+
+  # Keep in sync with `lib/mkDarwin.nix`. Darwin-only: on Linux these
+  # overrides would just turn cache hits (ffmpeg-full, tmux) into local
+  # rebuilds.
   ffmpegFullDarwinWorkarounds = final: prev: {
     # tmux 3.7c makes configure abort on darwin unless a jemalloc choice is
     # given explicitly; nixpkgs c8f90650 (2026-08-22) passes neither flag.
@@ -47,7 +51,11 @@ in
   # User identity is derived from myConfig so it lives in exactly one place
   # (the host file).
   home.username = config.myConfig.user.username;
-  home.homeDirectory = "/Users/${config.myConfig.user.username}";
+  home.homeDirectory =
+    if isDarwin then
+      "/Users/${config.myConfig.user.username}"
+    else
+      "/home/${config.myConfig.user.username}";
 
   # Pinned for compatibility with older home-manager defaults; bump
   # deliberately after reading the matching release notes.
@@ -56,8 +64,8 @@ in
   nixpkgs = {
     overlays = [
       inputs.neovim-nightly-overlay.overlays.default
-      ffmpegFullDarwinWorkarounds
-    ];
+    ]
+    ++ lib.optionals isDarwin [ ffmpegFullDarwinWorkarounds ];
     config = {
       allowUnfree = true;
       allowUnfreePredicate = _: true;
@@ -98,9 +106,14 @@ in
       uv
       yazi
     ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       yabai
       skhd
+    ]
+    # nix-darwin installs these system-wide on the macs
+    # (modules/darwin/default.nix); there is no system layer on Linux.
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+      go
     ]
     ++ lib.optionals (config.myConfig.host.role == "personal") [
       atuin
@@ -108,9 +121,9 @@ in
 
   home.sessionPath = [
     "$HOME/.local/bin"
-  ]
-  ++ lib.optionals pkgs.stdenv.isDarwin [
     "$HOME/go/bin"
+  ]
+  ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     "/Applications/Ghostty.app/Contents/MacOS"
     "$HOME/Applications/GoLand.app/Contents/MacOS"
     "/opt/homebrew/bin"

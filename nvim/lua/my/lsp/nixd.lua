@@ -7,7 +7,8 @@
 -- `:help lspconfig-nvim-0.11`.
 --
 -- This module is responsible for:
---   * Deciding which darwinConfigurations entry to feed nixd (based on hostname).
+--   * Deciding which darwinConfigurations entry to feed nixd (based on hostname),
+--     or, on Linux, the standalone homeConfigurations entry.
 --   * Pointing nixd at this repo's flake for option/attr completion across
 --     nixpkgs, nix-darwin, and home-manager.
 --
@@ -35,6 +36,27 @@ end
 
 local function build_settings()
   local ref = flake_ref()
+
+  -- Linux hosts have no nix-darwin layer, just a standalone home-manager
+  -- config (homeConfigurations.omarchy).
+  if vim.fn.has('mac') == 0 then
+    return {
+      nixd = {
+        nixpkgs = {
+          expr = string.format('import (builtins.getFlake "%s").inputs.nixpkgs { }', ref),
+        },
+        formatting = {
+          command = { 'nixfmt' },
+        },
+        options = {
+          home_manager = {
+            expr = string.format('(builtins.getFlake "%s").homeConfigurations.omarchy.options', ref),
+          },
+        },
+      },
+    }
+  end
+
   local darwin = darwin_config_name()
 
   return {
