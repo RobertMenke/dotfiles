@@ -41,6 +41,11 @@ in
               "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
             else
               "/opt/1Password/op-ssh-sign";
+          # Lets `git log --show-signature` / `git verify-commit` check our
+          # own ssh-signed commits instead of erroring out.
+          allowedSignersFile = "${pkgs.writeText "git-allowed-signers" ''
+            ${user.email} ${user.signingKey}
+          ''}";
         };
       };
       core = {
