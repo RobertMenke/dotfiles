@@ -98,6 +98,7 @@ in
       mirrord
       nixd
       nixfmt
+      python3
       ripgrep
       ruby
       rustup
