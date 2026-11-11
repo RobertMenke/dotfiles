@@ -18,6 +18,8 @@
 
   programs.zsh.enable = false;
   programs.fish.enable = true;
+  # Register fish in /etc/shells so it can be a login shell.
+  environment.shells = [ pkgs.fish ];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

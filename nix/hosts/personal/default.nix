@@ -5,7 +5,12 @@ in
 {
   system.primaryUser = username;
 
+  # nix-darwin only applies `shell` (and other attrs) to users listed here,
+  # which also requires a uid matching the existing account.
+  users.knownUsers = [ username ];
+
   users.users.${username} = {
+    uid = 501;
     name = username;
     home = "/Users/${username}";
     shell = pkgs.fish;
