@@ -1,15 +1,16 @@
-{ config, lib, ... }:
-let
-  live = config.myConfig.dotfiles.liveSourceDir;
-in
+{ lib, ... }:
 {
-  # Appends one more include to the Linux Ghostty entry point generated in
-  # ../home/dotfiles.nix. Later `config-file`s win, so mkAfter keeps these
-  # overrides after the shared config. Like `pickPath` there, the live
-  # checkout is referenced directly so edits apply without a rebuild.
+  # Appends omarchy's ghostty settings to the Linux entry point generated in
+  # ../home/dotfiles.nix, after the shared config so they win. Inlined, not
+  # `config-file`d, for the reason given there: included files override
+  # command-line flags, which broke omarchy's screensaver. Editing
+  # ghostty.conf therefore needs a switch.
+  #
+  # Only omarchy's theme file stays an include; it sets colors, which no
+  # caller passes on the command line.
   xdg.configFile."ghostty/config".text = lib.mkAfter ''
-    config-file = ${
-      if live != null then "${live}/nix/modules/omarchy/ghostty.conf" else "${./ghostty.conf}"
-    }
+
+    # --- Omarchy layer (nix/modules/omarchy/ghostty.conf) ---
+    ${builtins.readFile ./ghostty.conf}
   '';
 }
